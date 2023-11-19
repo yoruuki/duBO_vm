@@ -1,2 +1,73 @@
 # duBO_vm
-wIP_Personal filters and rules for uBlock Origin.
+Preferences for uBlock Origin. 
+## Modified Advanced Settings
+- blockingProfiles **11111/#F00 11010/#C0F 11001/#00F 10001/#000 00001**
+  - To fallback to easy mode with enchanced security/privacy when using 'Relax Blocking Mode' shortcut.
+- filterAuthorMode  **true**
+  - Enable the ability to set 'allow' rules from the popup panel.
+  - Enable point-and-click feature, to create temporary exception filters for static extended filters (i.e. cosmetic, scriptlet & html filters) from within the summary panel in the logger. The button to toggle on/off is labeled #@#.
+- uiPopupConfig **+logger**
+  - Bring back the logger icon in the mobile version of the popup panel.
+- userResourcesLocation
+  - It's possible to use more than one script. Add space after the existing URL then add another URL.
+    - **[Video-bg-play](https://gist.github.com/gwarser/3b47b61863bffcfebe4498c77b2301cd/raw/dc9cf1832605832a4ef669fa223f2cedb4ddb347/video-bg-play.js)** by [gwarser](https://github.com/gwarser).
+    - **[Workaround for Twitch ads](https://github.com/pixeltris/TwitchAdSolutions/)** by [pixeltris](https://github.com/pixeltris/).
+      - For security concern, use the permalink method because permalinks do not auto update.
+## Costum Filter Lists
+- [Anti-paywall filters](https://github.com/liamengland1/miscfilters/blob/master/antipaywall.txt) by [liamengland1](https://github.com/liamengland1/).
+- [Browse websites without logging in](https://github.com/DandelionSprout/adfilt/blob/master/BrowseWebsitesWithoutLoggingIn.txt) by [DandelionSprout](https://github.com/DandelionSprout/).
+- [Bypass Paywalls Clean filter](https://gitlab.com/magnolia1234/bypass-paywalls-clean-filters/-/blob/main/bpc-paywall-filter.txt) by [magnolia1234](https://gitlab.com/magnolia1234/bypass-paywalls-clean-filters/-/blob/main/bpc-paywall-filter.txt).
+- ClearURLs for uBo by [DandelionSprout](https://github.com/DandelionSprout/).
+- [Fuck FuckAdblock](https://github.com/bogachenko/fuckfuckadblock) by [bogachenko](https://github.com/bogachenko/). 
+- [LegitimateURLShortener](https://github.com/DandelionSprout/adfilt/blob/master/LegitimateURLShortener.txt) by [DandelionSprout](https://github.com/DandelionSprout/).
+- [OISD Big](https://oisd.nl).
+- [uBlock-Origin-dev-filter](https://github.com/quenhus/uBlock-Origin-dev-filter) by [guenhus](https://github.com/quenhus/).
+- [webannoyances](https://github.com/yourduskquibbles/webannoyances) by [yourduskquibbles](https://github.com/yourduskquibbles/).
+## References
+- [DandelionSprout's](https://github.com/DandelionSprout/) [adfit](https://github.com/DandelionSprout/adfilt/).
+  - https://github.com/DandelionSprout/adfilt/blob/master/Dandelion
+  - https://github.com/DandelionSprout/adfilt/blob/master/RedditTrashRemovalService.txt
+  - https://github.com/DandelionSprout/adfilt/blob/master/ImgurPureImageryExperience.txt
+  - https://github.com/DandelionSprout/adfilt/blob/master/StopAutoplayOnYouTube.txt
+  - https://github.com/DandelionSprout/adfilt/blob/master/TwitchPureViewingExperience.txt
+  - https://github.com/DandelionSprout/adfilt/blob/master/WikiaPureBrowsingExperience.txt
+- [divestedcg's dnsrm](https://github.com/divestedcg/dnsrm).
+- [gorhill's Twitter](https://twitter.com/gorhill/status/1377613397710229506).
+- [nobody's CDN](https://codeberg.org/nobody/LocalCDN/src/branch/main/CDN.txt).
+- [rentry.co FilterStalker](https://rentry.co/FilterStalker).
+- [rusty-snake's uBlockOrigin:My_filters](https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/uBlockOrigin:My_filters.txt).
+- [rusty-snake's uBlockOrigin:My rules](https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/uBlockOrigin:My_rules.txt).
+- [rusty-snake's uBlockOrigin:queryprune](https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/uBlockOrigin:queryprune.txt).
+- [r/uBlockOrigin](https://old.reddit.com/r/uBlockOrigin/).
+  - https://old.reddit.com/r/uBlockOrigin/comments/10l61bg/a_scriplet_to_download_ig_photo_and_video/
+  - https://old.reddit.com/r/uBlockOrigin/comments/10k6hvy/any_way_to_properly_hide_the_youtube_top_bar_all/
+  - https://old.reddit.com/r/uBlockOrigin/comments/10k6hvy/any_way_to_properly_hide_the_youtube_top_bar_all/j5qwieg/
+  - https://old.reddit.com/r/uBlockOrigin/comments/10nlkfz/is_there_a_ubo_tool_to_show_and_removed_duplicate/j69hpt1/
+  - https://old.reddit.com/r/uBlockOrigin/comments/10v8j89/tip_download_almost_anything_with_just_a_scriplet/
+  - https://old.reddit.com/r/uBlockOrigin/comments/cqwp0h/how_to_keep_the_requests_blocked_since_install/ex3nkbv
+  - https://old.reddit.com/r/uBlockOrigin/comments/lus7ac/firefox_android_youtube_autoplay_with_locked/
+  - https://old.reddit.com/r/uBlockOrigin/comments/okdbll/watch_youtube_videos_on_mobile_phone_even_if/
+  - https://old.reddit.com/r/uBlockOrigin/comments/xjm5tg/how_can_i_make_an_exception_for_google_recaptcha/ipa1zoz
+  - https://old.reddit.com/r/uBlockOrigin/comments/yaofbs/how_do_i_block_googlecom_but_allow_recaptcha/
+  - https://old.reddit.com/r/uBlockOrigin/comments/z8lkyi/how_to_hide_youtube_profile_pictures_in_the/
+  - https://old.reddit.com/r/uBlockOrigin/comments/zv87sc/is_there_a_way_in_advanced_mode_to_allow/
+  - https://old.reddit.com/r/uBlockOrigin/wiki/solutions
+  - https://old.reddit.com/r/uBlockOrigin/wiki/solutions#wiki_twitch
+- [r/VirtualYoutubers](https://old.reddit.com/r/VirtualYoutubers/).
+  - https://old.reddit.com/r/VirtualYoutubers/comments/101goor/new_year_new_me_weekly_discussion_thread_3rd/j375vwq/#c
+- [uBlock Github](https://github.com/gorhill/uBlock/).
+  - https://github.com/gorhill/uBlock/blob/master/assets/resources/scriptlets.js
+  - https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-Benefits-of-blocking-3rd-party-iframe-tags
+  - https://github.com/gorhill/uBlock/wiki/Per-site-switches#no-remote-fonts
+  - https://github.com/gorhill/uBlock/wiki/Privacy-stuff#gravatar-et-al
+  - https://github.com/gorhill/uBlock/wiki/Resources-Library
+  - https://github.com/gorhill/uBlock/wiki/Static-filter-syntax#if-condition
+  - https://github.com/gorhill/uBlock/tree/master/src/web_accessible_resources
+- [yourduskquibbles's webannoyances](https://github.com/yourduskquibbles/webannoyances/).
+  - https://github.com/yourduskquibbles/webannoyances/pull/474
+- [Yuki2718's adblock](https://github.com/Yuki2718/adblock/).
+  - https://github.com/Yuki2718/adblock/tree/master/medium_mode
+  - https://github.com/Yuki2718/adblock/blob/master/medium_mode/dynamic-rules.txt
+  - https://github.com/Yuki2718/adblock/blob/master/medium_mode/dynamic-rules-mob.txt
+- [Yuki2718's adblock2](https://github.com/Yuki2718/adblock2/).
+- [yokoffing's filterlists](https://github.com/yokoffing/filterlists).
