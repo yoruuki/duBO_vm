@@ -1,0 +1,963 @@
+! Inactive filter are either it doesn't work, better filter exist or I don't like it.
+
+! Replace third-party frames with a click2load banner
+*$3p,frame,redirect=click2load.html
+
+! Globally disable double click to fullscreen functionality
+! *##+js(aeld, dblclick) // It doesn't work. By default, scriptlet injection must be specified to hostnames
+! reddit.com,teddit.net,libredd.it,imgur.com##+js(aeld, dblclick) // It doesn't work, probably because it has a different video streaming protocol
+! piped.kavin.rocks,yewtu.be##+js(aeld, dblclick) // It doesn't work, probably because it has a different video streaming protocol
+! twitter.com,nitter.net##+js(aeld, dblclick) // It doesn't work, probably because it has a different video streaming protocol
+! bibliogram.jordanplayz158.xyz##+js(aeld, dblclick) // It doesn't work, probably because it has a different video streaming protocol
+
+! Globally enable videos to keep playing on mobile even when screen is turned off
+! *##+js(aeld, visibilitychange, function()) // It doesn't work. By default, scriptlet injection must be specified to hostnames
+! *##+js(video-bg-play) // It doesn't work. By default, scriptlet injection must be specified to hostnames
+
+! Block all requests (Gravatar (et al)) that pull commenter's avatar images
+||gravatar.com^$third-party
+
+! Block third-party fonts. A lighter alternative for 'Disable remote fonts' setting
+! *$font,third-party
+
+! Google
+! Removes consent 'Before you continue'
+www.google.*##^script:has-text(consentCookiePayload)
+www.google.*##+js(acis, document.cookie, YES+)
+google.*##+js(aeld, DOMContentLoaded, CONSENT)
+! Block subdomain request can generate breakage, disable if cause breakage
+||consent.google.com^
+! Removes 'People also search for'
+google.*##[id^="eob_"]
+! Removes login dialogs on various pages
+||accounts.google.com/gsi/*$xhr,script,3p
+! Clear every bit of the google url
+$removeparam=ved,domain=google.*
+
+! Reddit
+! App spam on mobile
+! Reddit app ad
+reddit.com##.XPromoPopupRpl
+reddit.com##xpromo-new-app-selector
+reddit.com##.bottom-bar, .XPromoBottomBar
+reddit.com##.useApp,.TopNav__promoButton
+reddit.com##body:style(pointer-events:auto!important;)
+! uBO Annoyances also has some of this
+! [1] https://github.com/uBlockOrigin/uAssets/issues/6826
+! [2] https://github.com/uBlockOrigin/uAssets/commit/a05d5b4061be9fc564fa021019cef366f63634fe
+! reddit.com##.XPromoPopup
+! reddit.com##body.scroll-disabled:style(overflow: visible!important; position: static!important;)
+reddit.com##.XPromoInFeed
+amp.reddit.com##.AppSelectorModal__body
+amp.reddit.com##.upsell_banner
+reddit.com##xpromo-app-selector
+reddit.com##body.scroll-is-blocked:style(overflow: visible!important; position: static!important;)
+reddit.com##+js(aeld, touchmove)
+reddit.com##.XPromoPopupRplNew
+reddit.com##body[style*="pointer-events"]:style(pointer-events:auto!important;)
+reddit.com##body[style*="overflow"]:style(overflow:auto!important;)
+! Removes 'Top Broadcast Now' and 'Top Livestream'
+reddit.com##a[href^="/rpan/"] > h3:has-text(/Top (livestream|broadcast)/):upward(7)
+! Block downloading
+||strapi.reddit.com^$xhr,domain=reddit.com
+! Removes RPAN button on the top left
+reddit.com##a._3dZnYgFFpifT-M_Vs2FAq6:nth-of-type(3)
+! Removes annoyance asking to login
+reddit.com##._1UtFUrE2ijAe5ba5uPgcfQ:remove()
+reddit.com##body[data-previous-overflow="auto"][style*="overflow: hidden; margin-right:"]:style(overflow: auto !important)
+! Removes user profile pop-up when hovering over a comment
+! reddit.com##[id^="AvatarUserInfoTooltip"]
+reddit.com##[id^="AvatarUserInfoTooltip-"][id$="-hover-id"], [id^="UserInfoTooltip-"][id$="-hover-id"]
+! Removes user icon in the comment
+! reddit.com##[alt="User avatar"]
+reddit.com##a[data-testid="comment_author_icon"] > div
+! Removes left over background of the removed user icon
+reddit.com##.ZvAy-PJfJmB8pzQxpz1sS._2mHuuvyV9doV3zwbZPtIPG:style(opacity: 0 !important)
+! Removes free award on the top left
+reddit.com##._1dJtiWITrnvIbQdXgYgdym.jEUbSHJJx8vISKpWirlfx
+! Removes 'Try Reddit Premium' on the homepage
+reddit.com##._1b1Jalg2nxA_Z-BjKXRfAV
+reddit.com##._10wb7d3rGvj56Gcs4IQWL5._1FUNcfOeszr8eruqLxCMcR > div._2vEf-C2keJaBMY9qk_BxVn > ._2QeqBqfT5UbHBoViZUt-wX._1G4yU68P50vRZ4USXfaceV.avKlJzxZU3brq4nAX0_i1
+!#if !env_mobile
+! Removes hard-to-close cookie banners on Imgur embeds
+||quantcast.mgr.consensu.org$domain=reddit.com|imgur.com
+! Prevent Imgur embeds from cutting off half the preview
+imgur.com#?#img[id=image-element][src*=imgur]:style(margin-top: 0 !important)
+!#endif
+
+! Imgur
+! Removes recommendations
+imgur.com##.Gallery-Sidebar
+imgur.com##.BottomRecirc
+imgur.com###side-gallery
+imgur.com##.Gallery-moreOnImgur
+! Removes social sharing buttons
+imgur.com##.share-fb
+imgur.com##.share-twttr
+imgur.com##.share-other
+imgur.com##.Gallery-Share
+imgur.com##.social-icon
+imgur.com##.share
+! Removes app promotion
+imgur.com##.get-app-block
+imgur.com#?#.popOverAvatar:has(.getTheApp)
+
+! Youtube
+! Ads slipping through
+||youtube.com^$csp=worker-src 'none'
+youtube.com##+js(json-prune, 2.playerResponse.adPlacements playerResponse.adPlacements playerResponse.playerAds adPlacements playerAds)
+youtube.com##+js(json-prune, 2.playerResponse.adPlacements)
+youtube.com##+js(json-prune, playerResponse.adPlacements)
+youtube.com##+js(json-prune, playerResponse.playerAds)
+youtube.com##+js(set, ytInitialPlayerResponse.adPlacements, null)
+! Removes consent
+youtube.com##+js(set, ytInitialData.topbar.desktopTopbarRenderer.interstitial.consentBumpRenderer.forceConsent, false)
+youtube.com##+js(json-prune, [].response.topbar.desktopTopbarRenderer.interstitial.consentBumpRenderer)
+youtube.com##+js(json-prune, topbar.desktopTopbarRenderer.interstitial.consentBumpRenderer)
+youtube.com##+js(set, ytInitialData.onResponseReceivedEndpoints, undefined)
+! Removes consent when specific videos redirect persistently to the consent page
+youtube.com##+js(set, ytInitialData.onResponseReceivedEndpoints, undefined)
+! Removes consent v2
+youtube.com##+js(set, ytInitialData.topbar.desktopTopbarRenderer.interstitial.consentBumpV2Renderer, undefined)
+youtube.com##+js(json-prune, [].response.overlay.consentBumpV2Renderer topbar.desktopTopbarRenderer.interstitial.consentBumpV2Renderer overlay.consentBumpV2Renderer response.overlay.consentBumpV2Renderer)
+! Removes consent when navigating directly to Shorts
+youtube.com##+js(set, ytInitialData.desktopTopbar.desktopTopbarRenderer.interstitial.consentBumpV2Renderer, undefined)
+! Removes login dialog
+youtube.com##+js(set, ytInitialPlayerResponse.auxiliaryUi.messageRenderers.upsellDialogRenderer.isVisible, false)
+youtube.com##+js(set, ytInitialData.overlay.upsellDialogRenderer.isVisible, false)
+youtube.com##+js(json-prune, [].playerResponse.auxiliaryUi.messageRenderers.upsellDialogRenderer)
+! Probably this one is also needed, but cannot reproduce anymore
+youtube.com##+js(json-prune, auxiliaryUi.messageRenderers.upsellDialogRenderer)
+! Removes 'My Mix' on the homepage
+youtube.com##ytd-rich-item-renderer #video-title-link[title*="Mix"][href$="start_radio=1"]:upward(ytd-rich-item-renderer)
+youtube.com##ytd-rich-item-renderer:has(yt-formatted-string:has-text(/^Mix/))
+! Removes 'My Mix' on the right side panel
+! youtube.com##ytd-compact-radio-renderer
+! Disable if mixes showing up in the recommended videos below
+youtube.com##.ytd-compact-radio-renderer:has-text(Mix - )
+! Removes 'My Mix' on the search results
+youtube.com##ytd-radio-renderer
+! Removes music playlists on the right side panel
+! youtube.com##ytd-compact-playlist-renderer .ytd-channel-name:has-text(/^YouTube/):upward(ytd-compact-playlist-renderer)
+! Removes recomended channels by name on the homepage
+youtube.com##ytd-rich-item-renderer:has(#byline-container:has-text(/BBC|CNN|FOX|NBC/))
+! Removes recommendations when pausing
+youtube.com,youtube-nocookie.com##.ytp-pause-overlay, .show-video-thumbnail-button
+~youtube.com,~youtube-nocookie.com##iframe ~ #topvbar > #rvid
+! Removes 'People also search/watched' recomendations but keep videos and channels on the search page
+youtube.com##ytd-search ytd-item-section-renderer>#contents>:not(ytd-video-renderer,ytd-channel-renderer),ytd-secondary-search-container-renderer
+! Removes Home ad placeholder
+youtube.com##ytd-browse[page-subtype="home"] ytd-rich-grid-row:style(--ytd-rich-grid-items-per-row: 1 !important;)
+youtube.com##ytd-browse[page-subtype="home"] ytd-rich-grid-row>#contents, ytd-browse[page-subtype="home"] ytd-rich-grid-row ytd-rich-grid-media:style(max-width: unset !important;)
+! Removes everything on the top side
+youtube.com###masthead-container
+youtube.com###content > #page-manager:style(margin-top:0px!important;)
+! Removes everything on the right side. It removes the panel for live chat, chapters and transcript
+youtube.com###secondary
+! Removes everything on the left side
+youtube.com##ytd-mini-guide-renderer.ytd-app.style-scope
+youtube.com###guide
+! Removes large play button for thumbnail visibility
+youtube.com,youtube-nocookie.com##.ytp-button.ytp-large-play-button
+! Removes 'Share', 'Copy Link' and 'Info' button on the right side of videos title
+youtube.com,youtube-nocookie.com##.ytp-share-button-visible.ytp-share-button.ytp-button
+youtube.com,youtube-nocookie.com##.ytp-copylink-button-visible.ytp-show-copylink-title.ytp-copylink-button.ytp-button
+youtube.com,youtube-nocookie.com##.ytp-cards-button.ytp-button
+! Removes 'Next' button
+youtube.com##.ytp-button.ytp-next-button
+! Removes 'Miniplayer' button
+youtube.com##.ytp-button.ytp-miniplayer-button
+! Removes 'Watch on YouTube' button
+youtube.com,youtube-nocookie.com##.ytp-impression-link
+youtube.com,youtube-nocookie.com##.yt-uix-sessionlink.ytp-button.ytp-youtube-button
+! Removes arrow key skip animation
+youtube.com,youtube-nocookie.com##.ytp-time-seeking
+youtube.com,youtube-nocookie.com##.ytp-doubletap-ui-legacy
+! Removes play/pause overlay
+youtube.com,youtube-nocookie.com##.ytp-bezel-text-hide
+youtube.com,youtube-nocookie.com##.html5-video-player.paused-mode .ytp-gradient-top, .html5-video-player.paused-mode .ytp-gradient-bottom, .html5-video-player.paused-mode .ytp-chrome-top, .html5-video-player.paused-mode .ytp-chrome-bottom:style(opacity:0!important;)
+! Disable double click to full screen functionality
+youtube.com,youtube-nocookie.com##+js(aeld, dblclick)
+! Make Theater mode full height but remove the page header
+! youtube.com##body ytd-watch-flexy[theater-requested_]:not([fullscreen]) #player-theater-container:style(height:calc(100vh - 56px) !important; max-height:calc(100vh - 56px) !important;min-height:calc(100vh - 56px) !important;)
+youtube.com##body ytd-watch-flexy[theater-requested_]:not([fullscreen]) #player-theater-container:style(height:calc(100vh - 0px) !important; max-height:calc(100vh - 0px) !important;min-height:calc(100vh - 0px) !important; )
+! Enable videos to keep playing on mobile even when screen is turned off. It also prevent 'Do you want continue?' popup
+youtube.com,youtube-nocookie.com##+js(video-bg-play)
+! youtube.com,youtube-nocookie.com##+js(aeld, visibilitychange, function())
+! Removes 'Dislike' button
+youtube.com##ytd-toggle-button-renderer.style-text.force-icon-button.ytd-menu-renderer.style-scope:nth-of-type(2)
+youtube.com###dislike-button
+youtube.com##ytm-slim-metadata-toggle-button-renderer.slim_video_action_bar_renderer_button:nth-of-type(2)
+youtube.com##div.comment-icons:nth-of-type(2)
+youtube.com##ytm-toggle-button-renderer:nth-of-type(2)
+youtube.com##ytd-toggle-button-renderer.ytd-menu-renderer.style-scope:nth-of-type(2)
+youtube.com###segmented-dislike-button
+! Removes 'Share' button
+youtube.com##ytd-button-renderer.size-default.style-default.force-icon-button.ytd-menu-renderer.style-scope:nth-of-type(1)
+youtube.com##.slim-video-action-bar-actions > c3-material-button.slim_video_action_bar_renderer_button.compact.button-renderer:nth-of-type(1)
+youtube.com##ytm-button-renderer.slim_video_action_bar_renderer_button:nth-of-type(1)
+youtube.com##ytd-button-renderer.ytd-menu-renderer.style-scope:nth-of-type(1) > yt-button-shape
+! Removes 'Topic' button in the description
+youtube.com##ytd-rich-metadata-renderer.ytd-rich-metadata-row-renderer.style-scope:nth-of-type(2)
+youtube.com###topic-link
+youtube.com##ytm-topic-link-renderer
+! Removes comment section. It removes 'Comments are turned off' info
+youtube.com###comments
+! Removes secondary comment section that appears only when users are logged in
+youtube.com###comment-teaser
+! Removes 'Sign In' button on mobile
+youtube.com##.mobile-topbar-header-sign-in-button
+! Removes 'Download' button
+youtube.com##ytd-download-button-renderer.ytd-menu-renderer.style-scope
+! Removes video recomendations
+youtube.com###related
+youtube.com##ytm-watch ytm-compact-video-renderer
+!#if !env_mobile
+! On mobile, it removes the video recomendations on the below side
+youtube.com##[section-identifier=related-items]
+!#endif
+! Removes profile pictures but keep it when on the watch page and the channel page
+youtube.com###details > .ytd-rich-grid-media.style-scope.yt-simple-endpoint
+youtube.com##.media-channel
+! youtube.com###author-thumbnail,#avatar
+! youtube.com###author-thumbnail
+youtube.com###author-thumbnail > .ytd-comment-renderer.style-scope.yt-simple-endpoint
+youtube.com###author-thumbnail > .ytd-backstage-post-renderer.style-scope.yt-simple-endpoint
+youtube.com##.no-transition.ytd-comment-simplebox-renderer.style-scope
+youtube.com##.comment-icon-container
+youtube.com##.comment-simplebox-icon
+youtube.com,youtube-nocookie.com##.ytp-title-channel
+!Removes 'Recommended for you'
+||youtube.com/related_ajax^
+! Removes 'Like' and 'Dislike' counters
+! youtube.com##ytd-toggle-button-renderer #text
+! youtube.com###sentiment
+! youtube.com##.slim-video-metadata-actions > [data-button-id]:first-of-type .button-renderer-text
+! youtube.com##.slim-video-metadata-actions > [data-button-id]:nth-of-type(2) .button-renderer-text
+! Removes 'Share' arrow button in fullscreen and embeds mode
+youtube.com,youtube-nocookie.com##button[class*=share-button]
+! Prevent video recomendations from showing up when pausing embedded videos
+##.ytp-scroll-min
+! Removes premium banner promotion
+youtube.com###masthead-ad
+youtube.com###premium-upsell-link
+youtube.com##.music-metadata-premium-upsell-link
+! Removes 'Recommended' tickers on top of embedded videos
+##.ytp-cards-teaser
+! Removes "Experiencing Interruptions" popup
+youtube.com,youtube-nocookie.com#?##toast:has(#text-container:has-text(/experiencing interruptions/i))
+! Removes 'My mix' and auto generated playlists
+youtube.com#?#ytd-compact-radio-renderer:has(ytd-thumbnail-overlay-bottom-panel-renderer)
+youtube.com#?#ytd-rich-item-renderer:has(ytd-thumbnail-overlay-bottom-panel-renderer)
+! Same as above. But in the window after a video ends, it leaves black squares where they were
+youtube.com#?#a.ytp-suggestion-set.ytp-videowall-still:has(.ytp-videowall-still-listlabel-mix:not(:matches-css(display: none)))
+! Removes playlist recommendations under videos
+youtube.com#?#ytd-compact-playlist-renderer:has(ytd-thumbnail-overlay-side-panel-renderer)
+! Removes overlays that are visible when hovering over a video for 'Watch Later' and 'Add to Queue'
+youtube.com###hover-overlays
+! HTML5 version
+youtube.com,youtube-nocookie.com##.video-annotations
+! Removes video recomendations on the video page
+youtube.com##.watch-sidebar-body > #watch-related > .related-list-item
+! Removes recommended channels on home page, susbcriptions page and feed
+youtube.com##.home .branded-page-v2-secondary-col
+youtube.com##.feed .branded-page-v2-secondary-col
+youtube.com##.guide-builder-v2 .branded-page-v2-secondary-col
+! Removes sharing tab below videos
+||youtube.com/share_ajax?action_get_share_box=1&video_id=$xmlhttprequest
+youtube.com##.action-panel-trigger[role=button][data-trigger-for=action-panel-share]
+youtube.com##.yt-uix-button[data-trigger-for=action-panel-share]
+! Removes recommended and featured videos in the endscreen
+||ytimg.com/yts/swfbin/player-*/endscreen.swf$object-subrequest,domain=youtube.com|youtube-nocookie.com
+youtube.com,youtube-nocookie.com##.html5-endscreen-content
+youtube.com,youtube-nocookie.com##.html5-endscreen
+! Removes related/featured/popular channels on channel pages
+youtube.com##.branded-page-v2-secondary-col > .branded-page-related-channels > .yt-uix-tooltip
+youtube.com##.branded-page-v2-secondary-col > .branded-page-related-channels > .yt-uix-tooltip + .branded-page-related-channels-list
+! Removes 'Subscribe to see more videos from this channel' on home page after watching some a video of a channel
+youtube.com###channel-subscription-promo-in-feed
+! Removes video recomendations after a video ends
+youtube.com,youtube-nocookie.com##.ytp-endscreen-content
+/endscreen.js$script,important,domain=youtube.com|youtube-nocookie.com
+! Stop autoplay
+youtube.com###head.ytd-compact-autoplay-renderer
+youtube.com##.checkbox-on-off
+youtube.com##.watch-sidebar-head
+youtube.com##.ytm-autonav-bar
+! Removes unrelated results on the search page
+youtube.com##ytd-shelf-renderer:has(#title:has-text(/^\s*(People also watched|For you|Previously watched|Latest from)\s*$/))
+youtube.com##ytd-horizontal-card-list-renderer.ytd-item-section-renderer:has-text(People also search for)
+! Removes recent uploads from a channel on the search page
+! youtube.com##ytd-shelf-renderer.style-scope:has-text(/Latest from/)
+! Removes the Shorts section
+youtube.com##[is-shorts]
+m.youtube.com##ytm-reel-shelf-renderer
+! Removes the Shorts button
+youtube.com###guide [title="Shorts"], .ytd-mini-guide-entry-renderer[title="Shorts"]
+m.youtube.com##.pivot-shorts:upward(ytm-pivot-bar-item-renderer)
+! Removes the Shorts from the search
+youtube.com##ytd-search ytd-video-renderer [overlay-style="SHORTS"]:upward(ytd-video-renderer)
+m.youtube.com##ytm-search ytm-video-with-context-renderer [data-style="SHORTS"]
+! Removes the Shorts sections from the channel section
+youtube.com##ytd-reel-shelf-renderer
+! Removes the Shorts tab
+youtube.com##ytd-browse[page-subtype="channels"] [role="tab"]:nth-of-type(3):has-text(Shorts)
+! Removes the Shorts grid view
+youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-grid-video-renderer [overlay-style="SHORTS"]:upward(ytd-grid-video-renderer)
+! Removes the Shorts list view
+youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-video-renderer [overlay-style="SHORTS"]:upward(ytd-item-section-renderer)
+! Removes the Shorts from the sidebar
+youtube.com###related ytd-compact-video-renderer [overlay-style="SHORTS"]:upward(ytd-compact-video-renderer)
+! Removes the new layout Shorts
+youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer [overlay-style="SHORTS"]:upward(ytd-rich-item-renderer)
+! Removes '1080 Premium' on the video quality menu
+youtube.com##.ytp-quality-menu .ytp-premium-label:upward(.ytp-menuitem)
+youtube.com##.ytp-quality-menu .ytp-menuitem:has(.ytp-premium-label)
+! Removes Self promotion dialogs in bottom left corner ("Join Now")
+youtube.com##ytd-popup-container > tp-yt-paper-dialog > ytd-mealbar-promo-renderer, ytd-popup-container > tp-yt-paper-dialog > yt-mealbar-promo-renderer:has-text(/Claim Offer|Join now|Not Now|No thanks|YouTube TV|live TV|Live TV|movies|sports|Try it free|unlimited DVR|watch NFL/)
+! Removes anti adblock that shoq up occasionally, it cause push notification to not work
+youtube.com##+js(set, yt.config_.EXPERIMENT_FLAGS.service_worker_enabled, false)
+! Workaround for slow loading
+youtube.com##+js(nano-stb, resolve(1), *, 0.001)
+
+! Twitch
+! Workaround for ads
+twitch.tv##+js(twitch-videoad)
+! Removes pause and finish overlay
+twitch.tv##.player-overlay-background--darkness-5.player-overlay-background.fPrwsJ.Layout-sc-nxg1ff-0
+twitch.tv##.player-overlay-background--darkness-1.player-overlay-background.fPrwsJ.Layout-sc-nxg1ff-0
+twitch.tv##.player-overlay-background.MIEJo.Layout-sc-1xcs6mc-0
+! Disable double click to full screen functionality
+twitch.tv##+js(aeld, dblclick)
+! Removes everything on the top side
+twitch.tv##.top-nav.hYNOFf.InjectLayout-sc-588ddc-0
+twitch.tv##.ljHLTo.clips-top-nav.InjectLayout-sc-588ddc-0
+twitch.tv##.top-nav.ghHeNF.InjectLayout-sc-1i43xsx-0
+! Removes everything on the left side
+twitch.tv##.hVqkZv.Layout-sc-nxg1ff-0 > div:nth-of-type(1)
+twitch.tv##.dajtya.Layout-sc-1xcs6mc-0 > div:nth-of-type(1)
+! Removes annoyances
+twitch.tv##.djAXJb.Layout-sc-nxg1ff-0 > .fCMDPR.Layout-sc-nxg1ff-0
+twitch.tv##.LtiJW.Layout-sc-nxg1ff-0 > div.fcPbos.Layout-sc-nxg1ff-0:nth-of-type(1)
+twitch.tv##.top-bar.fmjCoJ.Layout-sc-nxg1ff-0
+twitch.tv##div.hOVSHb.ScAttachedTooltipWrapper-sc-v8mg6d-0.Layout-sc-nxg1ff-0:nth-of-type(3)
+twitch.tv##.iBOiBB.Layout-sc-nxg1ff-0
+twitch.tv##.eRIYIp.Layout-sc-nxg1ff-0
+! Removes recomendations clips when clip ends
+twitch.tv##.clip-postplay-recommendations.epiWzC.Layout-sc-nxg1ff-0
+! Removes 'Popular Clips' section
+twitch.tv##.jlryzx.Layout-sc-nxg1ff-0
+! Removes "Recommended channels" section when user are not logged on
+twitch.tv##.tw-full-width > .tw-mg-b-2
+! Removes "Recommended channels" section when user are logged on
+twitch.tv##.recommended-channels
+twitch.tv##.tw-flex-grow-1 > div:nth-of-type(1) > .side-nav-section:nth-of-type(2)
+twitch.tv#?#.side-nav-section:has(path[d="M12.002 3.999a2 2 0 012 2v2L18 6v8l-3.998-2v2a2 2 0 01-2 1.999h-8a2 2 0 01-2-2V6a2 2 0 012-2h8zM12 6H4v8h8V6z"])
+! Remove 'Recomendations' from the following page
+twitch.tv#?#div:has(> .tw-mg-b-1 > h4[data-a-target=live-channels-header]) + div
+! Removes spacing between emotes for multi-part emotes
+twitch.tv#?#.message > span:has-text(/^ $/)
+twitch.tv#?#span.text-fragment:not(:has-text(/\S/))
+! Removes 'Popular videos [from everywhere]' row
+twitch.tv#?#div:nth-of-type(3):has(> .tw-pd-y-2)
+! Reduces the size of the chat header
+twitch.tv#?#.video-chat__header:style(height: 20px !important)
+twitch.tv#?#.tw-pd-r-1.tw-pd-l-2.tw-justify-content-between.tw-full-width:style(height: 2rem)
+! Broadens the chat textbox
+twitch.tv#?#.tw-flex-shrink-0.tw-full-width.tw-pd-b-2.tw-pd-t-1.tw-pd-x-2.video-chat__input:style(padding: 4px 1px 1px !important)
+twitch.tv#?#.tw-textarea.tw-textarea--no-resize:style(padding: 1px 35px !important; height: 55px !important)
+twitch.tv#?#.chat-input.tw-block:style(padding: 0 3px 2px !important)
+! Reduces the size of the 'Hosting [channel]' header
+twitch.tv#?#.tw-align-items-center.tw-flex.tw-flex-nowrap.tw-justify-content-between.tw-pd-1:style(padding-top: 0 !important; padding-bottom: 0 !important)
+! Narrows the spacing between the chat comments
+twitch.tv#?#.chat-line__message:style(padding: 2px 4px !important)
+twitch.tv#?#.tw-full-width.tw-pd-l-05.tw-pd-y-05.vod-message:style(padding: 2px 4px !important)
+twitch.tv#?#.clips-chat-replay > .tw-mg-b-1:style(margin-bottom: 2px !important)
+! Narrows the spacing between the chat comments on mobile
+twitch.tv#?#li.chat-message:style(padding: 2px !important)
+! Maximises the size of the clip viewer pages
+twitch.tv#?#.clips-watch.tw-lg-pd-b-5.tw-pd-b-2.tw-sm-pd-b-3:style(max-width: none)
+! Makes avatars square
+twitch.tv#?#.tw-avatar > img.tw-border-radius-rounded:style(border-radius: unset !important)
+
+! Twitter
+! Removes inserted sections (Who to follow/Topics to follow, etc.) on my timeline
+twitter.com##[aria-label="Timeline: Your Home Timeline"] div[style^="transform: translateY"][style*="position: absolute;"]:not(:first-child:has-text(/^Show \d\d? Tweets?$/)):not(:has(article, [href^="/i/status/"], [role="progressbar"]))
+! Removes inserted sections (Who to follow/Topics to follow, etc.) on others timeline
+twitter.com##[aria-label$="’s Tweets"] div[style^="transform: translateY"][style*="position: absolute;"]:not(:has(article, [href^="/i/status/"], [role="progressbar"]))
+! Removes 'Follow/Recommended Topic' when accessing topics
+twitter.com##article [aria-label^="Follow Topic"], article [aria-label^="Recommended Topic"]:upward(article)
+! Removes 'More Tweets' when accessing tweets
+twitter.com##[aria-label="Timeline: Conversation"] h2>div>span:has-text(/^More Tweets$/):upward([style^="transform"])
+twitter.com##[aria-label="Timeline: Conversation"] h2>div>span:has-text(/^More Tweets$/):upward([style^="transform"])~div
+! Removes 'Topics to follow' on the sidebar
+twitter.com##[data-testid="sidebarColumn"] [href="/i/topics/picker/home"]:upward(section)
+! Removes 'Trending now/Trends for you' on the sidebar
+twitter.com##[aria-label$="trending now" i]
+! Removes 'Who to follow/You might like' on the sidebar
+twitter.com##[aria-label="who to follow" i]:upward(1)
+! Removes login popup
+!#if !env_mobile
+! On mobile, this one breaks any panel confirmation including the panel used to switch from 'Top Tweets' to 'Latest Tweets'
+twitter.com##div#layers div[data-testid="sheetDialog"]:upward(div[role="group"][tabindex="0"])
+!#endif
+twitter.com##html:style(overflow: auto !important;)
+! Removes everything on the right side
+twitter.com##.r-1hycxz.r-1udh08x.r-zso239.r-aqfbo4.css-1dbjc4n
+! Removes everything on the left side
+twitter.com##.r-ipm5af.r-1xcajam.r-1pi2tsx.r-aqfbo4.css-1dbjc4n
+!#if env_mobile
+! Allow any panel confirmation on mobile
+!twitter.com#@##react-root
+twitter.com#@#.r-zchlnj.r-1xcajam.r-12vffkv.r-1d2f490.r-1p0dtai.r-aqfbo4.css-1dbjc4n
+!#endif
+! Removes analytics button
+twitter.com##article [role=group] [href$="/analytics"]:upward(div:not(:only-child))
+twitter.com##[aria-label="Timeline: Conversation"] [href*="/status/"] ~ span
+! Removes 'You might like'
+twitter.com##article [d$="2.66 6 1H5z"]:upward(article)
+! Removes app suggestion overlay
+twitter.com###layers>div:last-of-type:has-text(Switch to the app)
+! Removes Discover more / More Tweets - Conversation view suggestions
+twitter.com##[aria-label="Timeline: Conversation"] [data-testid="cellInnerDiv"] h2:has-text(/^(Discover more|More Tweets)$/):upward([data-testid="cellInnerDiv"])
+twitter.com##[aria-label="Timeline: Conversation"] [data-testid="cellInnerDiv"] h2:has-text(/^(Discover more|More Tweets)$/):upward([data-testid="cellInnerDiv"])~div
+! Removes 'Get verified'
+twitter.com##[aria-label="Get Verified"]
+
+! Facebook
+! Removes 'Suggested for you'
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) div:not(:only-child)>div:only-child>div:only-child>div:first-child[class=""]>div:not([data-0]):has-text(/^Suggested/):upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) :is(h3,h4) [role=button]:has-text(Follow):upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])):has-text(Suggested for you)
+! Removes 'People You May Know'
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See all"][href="/friends/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+! Removes 'Suggested groups'
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See more groups"][href="/groups/discover/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+! Removes 'Reels and short videos'
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See more"][href="/reel/?s=ifu_see_more"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+! Removes 'Marketplace'
+facebook.com##[aria-label*="Marketplace"] object > a[href^="/ads/"] > span:not(:empty):upward(11)
+facebook.com##[aria-label*="Marketplace"] object:has(> a[href^="/ads/"] > span:has-text(/^Sponsored$/)):upward(a):upward(3)
+! Removes related discussions panel
+facebook.com##div[role=article] span:not(>*):has-text(/^Related discussions$/):upward(span)
+! Hide the "# related" link/button on news and group feeds related discussions
+facebook.com##div[role=button] > span:not(>*):has-text(/related/i):upward(4)
+! Remove suggested pages
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="Suggested pages"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+! Removes video ads
+facebook.com##.j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > div > .p8dawk7l.abiwlrkh.l9j0dhe7.lzcic4wl.f1sip0of.esuyzwwr.i1ao9s8h.a8nywdso.qt6c0cv9.rz4wbd8a.jb3vyjys.hcukyx3x.oygrvhab.cxmmr5t8.kvgmc6g5.p7hjln8o.a8c37x1j.nhd2j8a9.rq0escxv.r7d6kgcz.e9989ue4.esr5mh6w.qu0x051f.g5ia77u1.oajrlxb2
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm
+facebook.com##.b3i9ofy5.p8dawk7l.l9j0dhe7.dhix69tm.sjgh65i0.wkznzc2l.tr9rh885.j4e3bd1d.rq0escxv.l82x9zwi.uo3d90p7.pw54ja7n.ue3kfks5 > .pybr56ya.dati1w0a.hv4rvrfc.f10w8fjw.lq239pai.b5q2rw42.btwxx1t3.owycx6da.bp9cbjyn.i1fnvgqd.pfnyh3mw.j83agx80.du4w35lb.l9j0dhe7.rq0escxv
+facebook.com##.ni8dbmo4.stjgntxs.l9j0dhe7 > .p8dawk7l.abiwlrkh.l9j0dhe7.lzcic4wl.f1sip0of.esuyzwwr.i1ao9s8h.a8nywdso.qt6c0cv9.rz4wbd8a.jb3vyjys.hcukyx3x.oygrvhab.cxmmr5t8.kvgmc6g5.p7hjln8o.a8c37x1j.nhd2j8a9.rq0escxv.r7d6kgcz.e9989ue4.esr5mh6w.qu0x051f.g5ia77u1.oajrlxb2
+facebook.com###sfx_post_6 > .cbu4d94t.j83agx80 > .du4w35lb.l9j0dhe7.rq0escxv > .k4urcfbm.l9j0dhe7.j83agx80 > .sbcfpzgs.k4urcfbm.stjgntxs.ni8dbmo4.l82x9zwi.uo3d90p7.pw54ja7n.ue3kfks5.hybvsw6c.du4w35lb.l9j0dhe7.rq0escxv > div > div > div > div > .ozuftl9m.tvfksri0.jcgfde61.afxsp9o4.ed0hlay0.frvqaej8.mk2mc5f4.s44p3ltw.ccm00jje.goun2846.l82x9zwi.uo3d90p7.pw54ja7n.ue3kfks5.h2mp5456.lxuwth05.bxzzcbxg.qbxu24ho.cwj9ozl2 > div > .hqeojc4l > .n851cfcs.rops0bsn.jxk88fls.l9j0dhe7 > .l9j0dhe7 > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > .l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm > .tghn160j.k4urcfbm.e4zzj2sf.pnx7fd3z.dpja2al7.pmk7jnqg.btwxx1t3.j83agx80.jeutjz8y.i09qtzwb.bp9cbjyn
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .k4urcfbm.l9j0dhe7.datstx6m > .k4urcfbm.l9j0dhe7.datstx6m > .datstx6m.hwddc3l5.k4urcfbm > .a8c37x1j.datstx6m.k4urcfbm
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .k4urcfbm.l9j0dhe7.datstx6m > .k4urcfbm.l9j0dhe7.datstx6m > .datstx6m.hwddc3l5.k4urcfbm
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .k4urcfbm.l9j0dhe7.datstx6m > .k4urcfbm.l9j0dhe7.datstx6m
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .k4urcfbm.l9j0dhe7.datstx6m
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm
+facebook.com##.du4w35lb.k4urcfbm.l8rlqa9s.datstx6m.kr520xx4.j9ispegn.pmk7jnqg.n7fi1qx3.rq0escxv.i09qtzwb > image
+facebook.com##.du4w35lb.k4urcfbm.l8rlqa9s.datstx6m.kr520xx4.j9ispegn.pmk7jnqg.n7fi1qx3.rq0escxv.i09qtzwb
+facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl
+facebook.com###jsc_c_uf > .l9j0dhe7 > div > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > .l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm > .nhd2j8a9.kr520xx4.j9ispegn.pmk7jnqg.n7fi1qx3.rq0escxv.i09qtzwb
+facebook.com###jsc_c_uf > .l9j0dhe7 > div > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > .l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm
+facebook.com##.l9j0dhe7 > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > .l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm > .nhd2j8a9.kr520xx4.j9ispegn.pmk7jnqg.n7fi1qx3.rq0escxv.i09qtzwb
+facebook.com##.l9j0dhe7 > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > .l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm
+facebook.com##.i09qtzwb.rq0escxv.n7fi1qx3.pmk7jnqg.j9ispegn.kr520xx4.j102wcjv > .i09qtzwb.rq0escxv.n7fi1qx3.pmk7jnqg.j9ispegn.kr520xx4
+facebook.com##.i09qtzwb.rq0escxv.n7fi1qx3.pmk7jnqg.j9ispegn.kr520xx4.j102wcjv
+facebook.com###jsc_c_39d > .l9j0dhe7 > div > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > div.l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm > div.kr520xx4.j9ispegn.pmk7jnqg.n7fi1qx3.rq0escxv.i09qtzwb
+facebook.com###jsc_c_39d > .l9j0dhe7 > div > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > div.l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm
+facebook.com##div.kr520xx4.j9ispegn.pmk7jnqg.n7fi1qx3.rq0escxv.i09qtzwb:nth-of-type(4)
+facebook.com###jsc_c_10f > .l9j0dhe7 > div > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > div.l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm > .nhd2j8a9.kr520xx4.j9ispegn.pmk7jnqg.n7fi1qx3.rq0escxv.i09qtzwb
+facebook.com###jsc_c_10f > .l9j0dhe7 > div > .j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > div.l9j0dhe7 > .k4urcfbm.kr520xx4.j9ispegn.pmk7jnqg.datstx6m.n7fi1qx3.i09qtzwb > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm
+
+! Fandom
+! Removes privacy notice overlay
+wikia.org,fandom.com##._1ouSF3xnwUjIOquxopuxSZ
+! Removes adbar on the bottom
+wikia.org,fandom.com###WikiaBarWrapper
+! Removes 'Topics' links from the top navigation bar
+wikia.org,fandom.com##.wds-global-navigation__links
+! Removes 'Topics' links from the bottom menu
+wikia.org,fandom.com##.wds-global-footer__fandom-sections
+! Removes 'Fan Feeds'
+wikia.org,fandom.com##.mcf-mosaic
+wikia.org,fandom.com###mixed-content-footer
+wikia.org,fandom.com##.SearchAdsTopWrapper
+||vignette.wikia.nocookie.net/vuh^
+! Removes sticky notifications from the bottom right
+wikia.org,fandom.com###WikiaNotifications
+! Removes links in the Popular Pages sidebar that are to sponsored pages on other wikis
+wikia.org,fandom.com##.rail-sponsored-content
+! Removes videos baked into the pages by Wikia
+fandom.com,wikia.org##.featured-video__wrapper
+fandom.com,wikia.org#?#.banner-notifications-placeholder:has-text(The video)
+! Removes ads or leftover empty boxes
+###WikiaTopAds
+##.wikia-ad:not(html, body)
+! Removes fandom.wikia.com link from the logos
+wikia.org,fandom.com#?##wds-company-logo-fandom-white:style(pointer-events: none !important; cursor: default !important;)
+wikia.org,fandom.com#?#.wds-global-navigation__logo:style(pointer-events: none !important; cursor: default !important)
+wikia.org,fandom.com#?#.wds-global-footer__header:style(pointer-events: none !important; cursor: default !important)
+! Removes ads for DnD Beyond and other Wikias on mobile
+wikia.org,fandom.com##.aff-big-unit
+wikia.org,fandom.com##.aff-unit__disclaimer-message
+wikia.org,fandom.com##.article-body .post-search-results
+wikia.org,fandom.com##.post-search-results__slant
+! Removes 'Related Wiki' from search results
+fandom.com##.unified-search__layout__right-rail
+! Removes other wiki advertising images
+||vignette.wikia.nocookie.net/*/images/0/0e^$important
+||vignette.wikia.nocookie.net/*/images/c/cd^$important
+! Removes background images, on the grounds that the ones on wikias with transparent boxes can be distracting, even if those with opaque boxes are not
+fandom.com#?#.community-background:style(background-image: none !important)
+fandom.com#?#.background-image:style(background-image: none !important)
+fandom.com#?#:root:style(--oasis-community-background-image: none !important)
+fandom.com#?#:root:style(--theme-body-background-image: none !important)
+! Enable the use of all the above anti-image rules in uBlock Origin and AdGuard
+@@||wikia.nocookie.net^*/images/$image,badfilter
+! Removes the survey prompt that appears to vehemently refuse to acknowledge earlier closings of it
+fandom.com###SurveyModule
+
+! DeepL
+! Removes everything on the top side
+deepl.com##.dl_header--sticky.dl_header
+deepl.com##.pageHeader-module--container--DugaI
+deepl.com###lmt_pro_ad_container
+! Removes annoyances on the bottom side
+deepl.com##.eSEOtericText.dl_visible_desktop_only.dl_top_element--wide.dl_body--redesign
+deepl.com###dl_quotes_container
+deepl.com##.dl_footerV2_container
+deepl.com##.relative > .contents--U08fI > .contents--U08fI > .contents--U08fI.Target--KAb3e
+deepl.com##.TranslatorPage-module--otherSections--Ko\+6x
+deepl.com##footer
+deepl.com###dl_cookieBanner
+deepl.com##.BasePageHeader-module--grey--0auCA.BasePageHeader-module--container--2By68
+deepl.com##.py-5.px-8.Content-module--appAdBannerWrapper---qos3
+deepl.com##.cookieBanner-module--outer--NAOuo
+deepl.com##.mt-\[30px\]
+deepl.com###lmt_pro_ad_container
+! Removes annoyances button
+deepl.com##.lmt__target_toolbar > span.contents--U08fI:nth-of-type(1) > .contents--U08fI > .contents--U08fI.Target--KAb3e
+deepl.com##.lmt__target_toolbar > span.contents--U08fI:nth-of-type(2) > .contents--U08fI > .contents--U08fI.Target--KAb3e
+deepl.com##.feedback_button_container--Rx\+ex
+
+! Papago
+! Removes annoyances on the top side
+papago.naver.com##.logo___3XLu8
+papago.naver.com##.btn_window_wrap___2aTK6
+papago.naver.com##.btn_save_wrap___1z3h7
+papago.naver.com##.btn_history_wrap___1quN0
+! Removes annoyances on the bottom side
+papago.naver.com##footer
+papago.naver.com##div.rwd_layout___2qH8c:nth-of-type(3)
+papago.naver.com##.dictionary_logo___359nq
+papago.naver.com##.type2___2Zef_.m_dictionary_logo___hpn3e > .dictionary_text___2KuEG
+! Removes annoyances button
+papago.naver.com###favorite
+papago.naver.com##.text_edit_area___3o8uj
+papago.naver.com##.btn_voice___e93jL
+papago.naver.com##.btn_ocr___37lXO
+papago.naver.com##.tooltip_more___DV9Np.tooltip___3KoCI
+
+! Google Translate
+! Removes everything on the top side
+translate.google.com##.pGxpHc
+translate.google.com##.VjFXz
+! Removes everything on the bottom side
+translate.google.com##.VlPnLc
+translate.google.com##.a88hkc
+! Removes annoyances button
+translate.google.com##.FFpbKc > div:nth-of-type(1)
+translate.google.com##.xU1xXd
+translate.google.com##.KIXMEf
+translate.google.com##.ZyvIDe
+translate.google.com##.d5mLze.itOtF.qiN4Vb.mN1ivc.eT1oJ.yHy1rc.VfPpkd-Bz112c-LgbsSe-OWXEXe-e5LLRc-SxQuSe.VfPpkd-Bz112c-LgbsSe
+
+! Download video
+! ##+js(jdownAll.js)
+
+! Others
+! *##+js(window.name-defuser) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(adfly-defuser) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(amazon_ads) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(amazon_apstag) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(doubleclick_instream_ad_status) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(google-analytics_ga) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(google-analytics_analytics) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(google-analytics_inpage_linkid) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(google-analytics_cx_api) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(google-ima) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(googletagservices_gpt) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(googletagmanager_gtm) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(googlesyndication_adsbygoogle) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(scorecardresearch_beacon) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(outbrain-widget) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+! *##+js(hd-main) // It doesn't work. By default, scriptlet injection must be specified to hostnames. Covered globally
+
+!#if false
+! Temporary fix for the right arrow elements to navigate horizontal lists
+! Originally
+youtube.com#@##masthead-positioner-height-offset, #right-arrow, .iv-branding.annotation-type-custom.annotation, .ytp-promotooltip-wrapper
+! Fixed
+! youtube.com###masthead-positioner-height-offset, #chips-wrapper > #right-arrow, .iv-branding.annotation-type-custom.annotation, .ytp-promotooltip-wrapper
+
+! Testing
+! URL Tracking Protection - expect overblocking
+! Collected from different source (ClearURLS, Neat Url, …)
+$removeparam=/^otm_/
+$removeparam=/campaign/
+@@patreon.com$removeparam=/campaign/
+$removeparam=/^[a-z]?mc=/
+$removeparam=/^vn(_[a-z]*)+=/
+$removeparam=assetType
+$removeparam=Campaign
+$removeparam=c_id
+$removeparam=CNDID
+$removeparam=Echobox
+$removeparam=elqTrack
+$removeparam=gs_l
+$removeparam=recipientId
+$removeparam=referer
+$removeparam=siteId
+$removeparam=wtrid
+$removeparam=/^[a-z]*ref[a-z]*=/,domain=facebook.com
+$removeparam=/^[a-z]*tk=/,domain=indeed.com
+$removeparam=/^ath/,domain=walmart.com
+$removeparam=/^jb/,domain=netflix.com
+$removeparam=/^li[a-z]{2}=/,domain=linkedin.com
+$removeparam=/^npv[0-9]+=/,domain=bigfishgames.com
+$removeparam=/^scm/,domain=taobao.com|tmall.com|aliexpress.*
+$removeparam=/^tl_[a-z_]+=/,domain=bloculus.com
+$removeparam=3p,domain=reddit.com
+$removeparam=CMP_ID,domain=backcountry.com
+$removeparam=CMP_SKU,domain=backcountry.com
+$removeparam=INT_ID,domain=backcountry.com
+$removeparam=MER,domain=backcountry.com
+$removeparam=RID,domain=realtor.com
+$removeparam=RewriteLast,domain=marketscreener.com
+$removeparam=__source,domain=cnbc.com
+$removeparam=_requestid,domain=vitamix.com
+$removeparam=_returnURL,domain=cell.com
+$removeparam=_xtd,domain=meetup.com
+$removeparam=aComposeInputSearch,domain=marketscreener.com
+$removeparam=abbucket,domain=taobao.com|tmall.com
+$removeparam=abtest,domain=taobao.com|tmall.com
+$removeparam=acm,domain=taobao.com|tmall.com
+$removeparam=action_history,domain=facebook.com
+$removeparam=ad_src,domain=lazada.com.my
+$removeparam=add_mots,domain=marketscreener.com
+$removeparam=af,domain=aliexpress.*
+$removeparam=ali_refid,domain=taobao.com|tmall.com
+$removeparam=ali_trackid,domain=taobao.com|tmall.com
+$removeparam=alid,domain=indeed.com
+$removeparam=app,domain=taobao.com|tmall.com|facebook.com
+$removeparam=as,domain=support.mozilla.org
+$removeparam=attr_tag,domain=youtube.com
+$removeparam=bftRwd,domain=taobao.com|tmall.com
+$removeparam=bftTag,domain=taobao.com|tmall.com
+$removeparam=bi,domain=vitamix.com
+$removeparam=callback,domain=bilibili.com
+$removeparam=can_id,domain=norml.org
+$removeparam=cid,domain=lazada.com.my|vitamix.com
+$removeparam=clickId,domain=allrecipes.com
+$removeparam=cm_lm,domain=moosejaw.com
+$removeparam=cn,domain=twitter.com
+$removeparam=comment_tracking,domain=facebook.com
+$removeparam=context,domain=accounts.firefox.com
+$removeparam=correlation_id,domain=reddit.com
+$removeparam=countview,domain=marketscreener.com
+$removeparam=cpp,domain=taobao.com|tmall.com
+$removeparam=cv,domain=aliexpress.*
+$removeparam=deep_link,domain=reddit.com
+$removeparam=di,domain=vitamix.com
+$removeparam=did,domain=lazada.com.my
+$removeparam=dl,domain=vitamix.com
+$removeparam=dp,domain=aliexpress.*
+$removeparam=dr_tracker,domain=autoplus.fr
+$removeparam=dti,domain=facebook.com
+$removeparam=ecp,domain=healio.com
+$removeparam=ehk,domain=bing.com
+$removeparam=eid,domain=facebook.com
+$removeparam=email,domain=dailycodingproblem.com
+$removeparam=email_referrer,domain=norml.org
+$removeparam=email_source,domain=github.com
+$removeparam=email_subject,domain=norml.org
+$removeparam=email_token,domain=github.com
+$removeparam=emc,domain=nytimes.com
+$removeparam=entrypoint,domain=accounts.firefox.com
+$removeparam=esrc,domain=newyorker.com
+$removeparam=ex,domain=realtor.com
+$removeparam=exp,domain=hh.ru
+$removeparam=extid,domain=facebook.com
+$removeparam=fl,domain=backcountry.com
+$removeparam=flite,domain=facebook.com
+$removeparam=form_type,domain=accounts.firefox.com
+$removeparam=from,domain=diepresse.com|wps.com
+$removeparam=ftentidentifier,domain=facebook.com
+$removeparam=grpos,domain=hh.ru
+$removeparam=h,domain=boredpanda.com
+$removeparam=hash,domain=autoplus.fr
+$removeparam=hrc,domain=facebook.com
+$removeparam=identityID,domain=realtor.com
+$removeparam=idprob,domain=autoplus.fr
+$removeparam=impid,domain=taobao.com|tmall.com
+$removeparam=impsrc,domain=lazada.com.my
+$removeparam=internalSource,domain=allrecipes.com
+$removeparam=intl,domain=bestbuy.com
+$removeparam=iref,domain=zoho.com
+$removeparam=iv_,domain=backcountry.com
+$removeparam=kw,domain=youtube.com
+$removeparam=lg,domain=bing.com
+$removeparam=lien,domain=marketscreener.com
+$removeparam=link_id,domain=gog.com|norml.org
+$removeparam=lr,domain=yandex.*
+$removeparam=ls_ref,domain=facebook.com
+$removeparam=lygClk,domain=taobao.com|tmall.com
+$removeparam=m_bt,domain=healio.com
+$removeparam=mall_affr,domain=aliexpress.*
+$removeparam=mots,domain=marketscreener.com
+$removeparam=mp,domain=lazada.com.my
+$removeparam=mr:adType,domain=backcountry.com
+$removeparam=mr:device,domain=backcountry.com
+$removeparam=mr:referralID,domain=backcountry.com
+$removeparam=mr:trackingCode,domain=backcountry.com
+$removeparam=mt_nav,domain=facebook.com
+$removeparam=mytmenu,domain=taobao.com|tmall.com
+$removeparam=nb,domain=tweakers.net
+$removeparam=npc,domain=bigfishgames.com
+$removeparam=npi,domain=bigfishgames.com
+$removeparam=ns,domain=taobao.com|tmall.com
+$removeparam=original_url,domain=reddit.com
+$removeparam=pa,domain=lazada.com.my
+$removeparam=padding,domain=facebook.com
+$removeparam=pageid,domain=facebook.com
+$removeparam=partner,domain=nytimes.com|ozon.ru
+$removeparam=pc,domain=bigfishgames.com
+$removeparam=pl,domain=net-parade.it
+$removeparam=platform,domain=mozilla.org
+$removeparam=plim,domain=hh.ru
+$removeparam=pos,domain=taobao.com|tmall.com|lazada.com.my
+$removeparam=position,domain=sourceforge.net
+$removeparam=price,domain=taobao.com|tmall.com
+$removeparam=ptl,domain=hh.ru
+$removeparam=pvid,domain=taobao.com|tmall.com
+$removeparam=qp,domain=bing.com
+$removeparam=reco_id,domain=allegro.pl
+$removeparam=redircnt,domain=yandex.*
+$removeparam=redirectedFrom,domain=academic.oup.com
+$removeparam=ref,domain=9gag.com|readdc.com
+$removeparam=refId,domain=linkedin.com
+$removeparam=referringContentType,domain=allrecipes.com
+$removeparam=referringId,domain=allrecipes.com
+$removeparam=rid,domain=facebook.com
+$removeparam=riftinfo,domain=redfin.com
+$removeparam=rmatt,domain=backcountry.com
+$removeparam=rt,domain=facebook.com
+$removeparam=rtoken,domain=zillow.com
+$removeparam=ru,domain=bing.com
+$removeparam=rv,domain=meetup.com
+$removeparam=s,domain=twitter.com
+$removeparam=scene,domain=taobao.com|tmall.com
+$removeparam=sd,domain=vitamix.com
+$removeparam=sending_id,domain=autoplus.fr
+$removeparam=share_app_name,domain=tiktok.com
+$removeparam=share_crt_v,domain=taobao.com|tmall.com
+$removeparam=share_iid,domain=tiktok.com
+$removeparam=shareurl,domain=taobao.com|tmall.com
+$removeparam=short_name,domain=taobao.com|tmall.com
+$removeparam=sid,domain=allegro.pl|mozillazine.org
+$removeparam=site_id,domain=autoplus.fr
+$removeparam=sm,domain=tb.cn
+$removeparam=source,domain=agata88.com|newyorker.com|norml.org|sourceforge.net
+$removeparam=sourceType,domain=taobao.com|tmall.com
+$removeparam=sp,domain=youtube.com
+$removeparam=sp_tk,domain=taobao.com|tmall.com
+$removeparam=sr,domain=techcrunch.com
+$removeparam=src,domain=shutterstock.com|mozilla.org
+$removeparam=srcc,domain=onet.pl
+$removeparam=st,domain=reddit.com
+$removeparam=stl,domain=hh.ru
+$removeparam=suid,domain=taobao.com|tmall.com
+$removeparam=swnt,domain=hh.ru
+$removeparam=t,domain=hh.ru
+$removeparam=ti,domain=backcountry.com
+$removeparam=tpa,domain=youku.com
+$removeparam=trackInfo,domain=taobao.com|tmall.com
+$removeparam=turing_bucket,domain=taobao.com|tmall.com
+$removeparam=type_recherche,domain=marketscreener.com
+$removeparam=type_recherche_forum,domain=marketscreener.com
+$removeparam=u,domain=tweakers.net
+$removeparam=u1,domain=walmart.com
+$removeparam=un,domain=taobao.com|tmall.com
+$removeparam=ut_sk,domain=taobao.com|tmall.com
+$removeparam=utkn,domain=taobao.com|tmall.com
+$removeparam=utparam,domain=taobao.com|tmall.com
+$removeparam=video_source,domain=facebook.com
+$removeparam=vss,domain=hh.ru
+$removeparam=wbdcd,domain=tchibo.de
+$removeparam=webUserId,domain=moosejaw.com
+$removeparam=x,domain=newsletter.lidl.com
+$removeparam=xt_at,domain=diepresse.com
+||linkedin.com/learning$removeparam=u
+||maps.api.here.com/maptile/2.1/maptile/$removeparam=~/^(app_code|app_id|lg|token)=/
+||maps.cit.api.here.com/maptile/2.1/maptile/$removeparam=~/^(app_code|app_id|lg|token)=/
+||styles.redditmedia.com/*/styles/bannerBackgroundImage_*$removeparam
+||styles.redditmedia.com/*/styles/communityIcon_*$removeparam
+! Seen in the wild
+! Global
+$removeparam=/^pk_/
+$removeparam=campaignId
+$removeparam=campID
+$removeparam=icid
+$removeparam=mc
+$removeparam=nav_source
+$removeparam=ref_
+$removeparam=referrer
+$removeparam=wt
+! Site specific
+$removeparam=/^et/,domain=zeit.de
+$removeparam=INTCMP,domain=theguardian.com
+$removeparam=adobe_mc,domain=kaufland.com
+$removeparam=app,domain=youtube.com
+$removeparam=at,domain=podcasts.apple.com
+$removeparam=c,domain=knobelbox.com
+$removeparam=categoryId,domain=paypal-corp.com
+$removeparam=chan,domain=wps.com
+$removeparam=cid,domain=digitale-angebote.welt.de
+$removeparam=collection,domain=nba.com
+$removeparam=componentEventParams,domain=theguardian.com
+$removeparam=context,domain=nytimes.com
+$removeparam=cref,domain=kaufland-foto.de
+$removeparam=ct,domain=apple.com
+$removeparam=cta,domain=deepl.com
+$removeparam=dbkanal_007,domain=bahn.de|dbmietwagen.ypsilon.net|hrs.de
+$removeparam=entry_page,domain=sueddeutsche.de
+$removeparam=entry_service,domain=zeit.de
+$removeparam=flyx,domain=kaufland.de
+$removeparam=from,domain=indeed.com|ferrari.com
+$removeparam=gi,domain=betterprogramming.pub
+$removeparam=hnr,domain=focus-abo.de
+$removeparam=icmp,domain=lego.com
+$removeparam=icode,domain=stern.de|zeit.de
+$removeparam=intcid,domain=kaufland.de
+$removeparam=intcp,domain=sueddeutsche.de
+$removeparam=intsrc,domain=sueddeutsche.de
+$removeparam=itscg,domain=podcasts.apple.com
+$removeparam=itsct,domain=podcasts.apple.com
+$removeparam=jw_chl_seg,domain=golem.de|wuv.de
+$removeparam=keyAccount,domain=kaufland-foto.de
+$removeparam=layer,domain=zeit.de
+$removeparam=li,domain=msn.com
+$removeparam=listId,domain=imdb.com
+$removeparam=ls,domain=podcasts.apple.com
+$removeparam=mt,domain=podcasts.apple.com
+$removeparam=navi,domain=handelsblatt.com
+$removeparam=nlayer,domain=handelsblatt.com
+$removeparam=onwewe,domain=stern.de
+$removeparam=plsrc,domain=nba.com
+$removeparam=product,domain=kaufland-foto.de
+$removeparam=ref,domain=bild.de|computerbild.de|creativecommons.org|derstandard.at|focus.de|openhub.net|soundcloud.com|wordpress.com
+$removeparam=region,domain=nytimes.com
+$removeparam=rf,domain=imdb.com|gutefrage.net
+$removeparam=rt,domain=ebay.*
+$removeparam=sk,domain=betterprogramming.pub
+$removeparam=source,domain=heise.de|rp-online.de|swp.de|c4isrnet.com
+$removeparam=ssrc,domain=stackoverflow.com
+$removeparam=tid,domain=dhl.de|deutschepost.de
+$removeparam=trigger,domain=dropbox.com
+$removeparam=trk,domain=linkedin.com
+$removeparam=var,domain=ebay.*
+$removeparam=via_email,domain=github.com
+$removeparam=c,domain=cubikon.de
+$removeparam=/^pl=opensearch$/,domain=startpage.com
+||abo.spiegel.de|$removeparam
+||tiktok.com/api/$removeparam
+||premium.zeit.de/bestellung/$removeparam
+! Sites to test (covered globally)
+$removeparam=campID,domain=faz.net
+$removeparam=campaignId,domain=nytimes.com
+$removeparam=icid,domain=checkout.prod.ps.welt.de|microsoft.com|bild.de
+$removeparam=mv,domain=zeit.de
+$removeparam=nav_source,domain=gitlab.com
+$removeparam=ocid,domain=msn.com
+$removeparam=ref_,domain=imdb.com
+$removeparam=referrer,domain=google.com
+$removeparam=wt,domain=sueddeutsche.de
+! To counter unnecessary or too generic allowlists which were not addressed or won't be addressed by the maintainer
+! uBlock - Unbreak
+@@||scdn.co/cdn/js/gtag.$script,domain=spotify.com,badfilter
+@@||spclient.wg.spotify.com/$xhr,domain=spotify.com,badfilter
+! EL
+/prebid1.$important,domain=9to5google.com|9to5mac.com|9to5toys.com|electrek.co|dronedj.com
+||accuweather.com/bundles/prebid.$important
+! May cause sign-in trouble for US IP
+||eventcom.api.np.km.playstation.net/event^$important
+||g.doubleclick.net/tag/js/gpt.js$important,domain=accuweather.com
+||networkworld.com/www/js/ads/$important
+@@||cdnjs.cloudflare.com/ajax/libs/$script,domain=gounlimited.to,badfilter
+@@||clients*.google.com/adsense/*?key=$domain=~calcalist.co.il|~gaytube.com|~mako.co.il|~pornhub.com|~pornhubthbh7ap3u.onion|~redtube.com|~redtube.com.br|~tube8.com|~tube8.es|~tube8.fr|~walla.co.il|~xtu,badfilter
+! EP
+||omtrdc.net/rest/$important
+||smetrics.aem.playstation.com^$important
+||walmart.com^*/logger^$xhr,important
+@@||s.yimg.com^*/advertisement/sponsor/promo/ad.png$image,domain=news.yahoo.com,badfilter
+! AG Base
+! Too broad and the bait was removed from EL
+@@/js/ads.js|$script,1p,domain=~internethaber.com|~knaqu.tv,badfilter
+@@||2mdn.net/instream/$badfilter
+@@||9anime.to/assets^$badfilter
+@@||ads.exoclick.com/ads.js$domain=sss.xxx|hdzog.com|hclips.com,badfilter
+@@||amazon-adsystem.com^$domain=weather.com,badfilter
+! If breakage, add 'speedtest.net##+js(set, apstag.init, noopFunc)'
+@@||b.cdnst.net/javascript/amazon.js$domain=speedtest.net,badfilter
+@@||dev.visualwebsiteoptimizer.com/j.php$badfilter
+@@||dmmzkfd82wayn.cloudfront.net^$domain=manga1001.com,badfilter
+@@||imasdk.googleapis.com/js/core/bridge*.html$domain=~spotify.com,badfilter
+@@||krebsonsecurity.com$badfilter
+@@||kts.visitstats.com/in^$domain=txxx.com,badfilter
+@@||livezombymil.com/*/tghr.js$domain=manga1001.com,badfilter
+@@||reutersmedia.net/resources^$badfilter
+@@||s1.wp.com^$badfilter
+@@||segment-data.zqtk.net^$domain=wsj.com,badfilter
+@@||syndication.exosrv.com/splash.php$domain=kissjav.com|russkoepornotube.com,badfilter
+@@||wp.com/p/jetpack^$badfilter
+! AG TPL
+@@||google-analytics.com/analytics.js$domain=flaticon.com,badfilter
+@@||google-analytics.com/analytics.js$domain=manga-zero.com,badfilter
+@@||google-analytics.com/analytics.js$domain=reuters.com,badfilter
+@@||google-analytics.com/gtm/js?id=$domain=reuters.com,badfilter
+@@||google-analytics.com/plugins/ua/linkid.js$domain=reuters.com,badfilter
+@@||googletagmanager.com/gtm.js$domain=reuters.com,badfilter
+@@||cdn.tt.omtrdc.net/cdn/target.js$badfilter
+@@||dev.visualwebsiteoptimizer.com/j.php$badfilter
+! Fanboy's ET
+! These allow too many ad-scripts not related to blocker detection
+@@.com/ads.js$script,1p,badfilter
+@@/js/advertisement.$script,badfilter
+@@/js/ads.js$script,badfilter
+@@/wp-content/*/adve*.js$script,badfilter
+@@||cloudfront.net/assets/$script,3p,badfilter
+@@||i-mobile.co.jp/script/ad$script,badfilter
+@@||client-event-reporter.twitch.tv^$xhr,domain=twitch.tv,badfilter
+! Bad TLDs 
+||agency^
+||bid^
+||cf^
+||ga^
+||gdn^
+||gq^
+||ooo^
+||loan^
+||ml^,domain=~lingva.ml
+||pw^
+||tk^
+||top^
+! Privacy
+||collector.github.com^
+||api.github.com/_private/browser/errors
+||cmp.zdf.de^
+!#endif
