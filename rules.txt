@@ -1,7 +1,3 @@
-no-csp-reports: * true
-no-large-media: behind-the-scene false
-* * 3p-frame block
-* * 3p-script block
 * akadns.net * noop
 * akamai.net * noop
 * akamaiedge.net * noop
