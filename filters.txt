@@ -333,9 +333,11 @@ twitch.tv##+js(aeld, dblclick)
 twitch.tv##.top-nav.hYNOFf.InjectLayout-sc-588ddc-0
 twitch.tv##.ljHLTo.clips-top-nav.InjectLayout-sc-588ddc-0
 twitch.tv##.top-nav.ghHeNF.InjectLayout-sc-1i43xsx-0
+twitch.tv##.top-nav.kjjhRA.InjectLayout-sc-1i43xsx-0
 ! Removes everything on the left side
 twitch.tv##.hVqkZv.Layout-sc-nxg1ff-0 > div:nth-of-type(1)
 twitch.tv##.dajtya.Layout-sc-1xcs6mc-0 > div:nth-of-type(1)
+twitch.tv##.side-nav--collapsed.side-nav.ceLdPR.Layout-sc-1xcs6mc-0
 ! Removes annoyances
 twitch.tv##.djAXJb.Layout-sc-nxg1ff-0 > .fCMDPR.Layout-sc-nxg1ff-0
 twitch.tv##.LtiJW.Layout-sc-nxg1ff-0 > div.fcPbos.Layout-sc-nxg1ff-0:nth-of-type(1)
@@ -343,6 +345,7 @@ twitch.tv##.top-bar.fmjCoJ.Layout-sc-nxg1ff-0
 twitch.tv##div.hOVSHb.ScAttachedTooltipWrapper-sc-v8mg6d-0.Layout-sc-nxg1ff-0:nth-of-type(3)
 twitch.tv##.iBOiBB.Layout-sc-nxg1ff-0
 twitch.tv##.eRIYIp.Layout-sc-nxg1ff-0
+twitch.tv##.disclosure-tool.bSEXcd.Layout-sc-1xcs6mc-0
 ! Removes recomendations clips when clip ends
 twitch.tv##.clip-postplay-recommendations.epiWzC.Layout-sc-nxg1ff-0
 ! Removes 'Popular Clips' section
@@ -527,6 +530,7 @@ fandom.com###SurveyModule
 deepl.com##.dl_header--sticky.dl_header
 deepl.com##.pageHeader-module--container--DugaI
 deepl.com###lmt_pro_ad_container
+deepl.com##.BasePageHeader-module--stickyHeader--Ofk9B.BasePageHeader-module--container--2By68
 ! Removes annoyances on the bottom side
 deepl.com##.eSEOtericText.dl_visible_desktop_only.dl_top_element--wide.dl_body--redesign
 deepl.com###dl_quotes_container
@@ -540,6 +544,7 @@ deepl.com##.py-5.px-8.Content-module--appAdBannerWrapper---qos3
 deepl.com##.cookieBanner-module--outer--NAOuo
 deepl.com##.mt-\[30px\]
 deepl.com###lmt_pro_ad_container
+deepl.com##div.lg\:px-\[70px\].p-8
 ! Removes annoyances button
 deepl.com##.lmt__target_toolbar > span.contents--U08fI:nth-of-type(1) > .contents--U08fI > .contents--U08fI.Target--KAb3e
 deepl.com##.lmt__target_toolbar > span.contents--U08fI:nth-of-type(2) > .contents--U08fI > .contents--U08fI.Target--KAb3e
