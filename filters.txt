@@ -548,6 +548,7 @@ deepl.com##div.lg\:px-\[70px\].p-8
 deepl.com##.lmt__target_toolbar > span.contents--U08fI:nth-of-type(1) > .contents--U08fI > .contents--U08fI.Target--KAb3e
 deepl.com##.lmt__target_toolbar > span.contents--U08fI:nth-of-type(2) > .contents--U08fI > .contents--U08fI.Target--KAb3e
 deepl.com##.feedback_button_container--Rx\+ex
+deepl.com###headlessui-dialog-36
 
 ! Papago
 ! Removes annoyances on the top side
