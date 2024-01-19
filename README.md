@@ -38,6 +38,8 @@ Preferences for uBlock Origin.
 - [rusty-snake's uBlockOrigin:My_filters](https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/uBlockOrigin:My_filters.txt).
 - [rusty-snake's uBlockOrigin:My rules](https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/uBlockOrigin:My_rules.txt).
 - [rusty-snake's uBlockOrigin:queryprune](https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/uBlockOrigin:queryprune.txt).
+- [r/privacy](https://old.reddit.com/r/privacy/).
+  - https://old.reddit.com/r/privacy/comments/18u7q0v/reddit_now_tracks_whose_links_you_click_and_this/
 - [r/uBlockOrigin](https://old.reddit.com/r/uBlockOrigin/).
   - https://old.reddit.com/r/uBlockOrigin/comments/10l61bg/a_scriplet_to_download_ig_photo_and_video/
   - https://old.reddit.com/r/uBlockOrigin/comments/10k6hvy/any_way_to_properly_hide_the_youtube_top_bar_all/
