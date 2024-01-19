@@ -129,7 +129,7 @@ youtube.com##+js(json-prune, [].playerResponse.auxiliaryUi.messageRenderers.upse
 ! Probably this one is also needed, but cannot reproduce anymore
 youtube.com##+js(json-prune, auxiliaryUi.messageRenderers.upsellDialogRenderer)
 ! Removes 'My Mix' on the homepage
-youtube.com##ytd-rich-item-renderer #video-title-link[title*="Mix"][href$="start_radio=1"]:upward(ytd-rich-item-renderer)
+youtube.com##ytd-rich-item-renderer:has(#video-title-link[title*="Mix"][href$="start_radio=1"])
 youtube.com##ytd-rich-item-renderer:has(yt-formatted-string:has-text(/^Mix/))
 ! Removes 'My Mix' on the right side panel
 ! youtube.com##ytd-compact-radio-renderer
@@ -138,7 +138,7 @@ youtube.com##.ytd-compact-radio-renderer:has-text(Mix - )
 ! Removes 'My Mix' on the search results
 youtube.com##ytd-radio-renderer
 ! Removes music playlists on the right side panel
-! youtube.com##ytd-compact-playlist-renderer .ytd-channel-name:has-text(/^YouTube/):upward(ytd-compact-playlist-renderer)
+! youtube.com##ytd-compact-playlist-renderer:has([title^="YouTube"])
 ! Removes recomended channels by name on the homepage
 youtube.com##ytd-rich-item-renderer:has(#byline-container:has-text(/BBC|CNN|FOX|NBC/))
 ! Removes recommendations when pausing
@@ -294,21 +294,21 @@ m.youtube.com##ytm-reel-shelf-renderer
 ! Removes the Shorts button
 youtube.com###guide [title="Shorts"], .ytd-mini-guide-entry-renderer[title="Shorts"]
 m.youtube.com##.pivot-shorts:upward(ytm-pivot-bar-item-renderer)
-! Removes the Shorts from the search
-youtube.com##ytd-search ytd-video-renderer [overlay-style="SHORTS"]:upward(ytd-video-renderer)
+! Removes the Shorts
+youtube.com##ytd-search ytd-video-renderer:has([overlay-style="SHORTS"])
 m.youtube.com##ytm-search ytm-video-with-context-renderer [data-style="SHORTS"]
 ! Removes the Shorts sections from the channel section
 youtube.com##ytd-reel-shelf-renderer
 ! Removes the Shorts tab
 youtube.com##[tab-title="Shorts"]
 ! Removes the Shorts grid view
-youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-grid-video-renderer [overlay-style="SHORTS"]:upward(ytd-grid-video-renderer)
+youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-grid-video-renderer:has([overlay-style="SHORTS"])
 ! Removes the Shorts list view
-youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-video-renderer [overlay-style="SHORTS"]:upward(ytd-item-section-renderer)
+youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-video-renderer:has([overlay-style="SHORTS"])
 ! Removes the Shorts from the sidebar
-youtube.com###related ytd-compact-video-renderer [overlay-style="SHORTS"]:upward(ytd-compact-video-renderer)
+youtube.com###related ytd-compact-video-renderer:has([overlay-style="SHORTS"])
 ! Removes the new layout Shorts
-youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer [overlay-style="SHORTS"]:upward(ytd-rich-item-renderer)
+youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer:has([overlay-style="SHORTS"])
 ! Removes '1080 Premium' on the video quality menu
 youtube.com##.ytp-quality-menu .ytp-premium-label:upward(.ytp-menuitem)
 youtube.com##.ytp-quality-menu .ytp-menuitem:has(.ytp-premium-label)
