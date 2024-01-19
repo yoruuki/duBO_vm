@@ -84,6 +84,12 @@ reddit.com##._10wb7d3rGvj56Gcs4IQWL5._1FUNcfOeszr8eruqLxCMcR > div._2vEf-C2keJaB
 ! Prevent Imgur embeds from cutting off half the preview
 imgur.com#?#img[id=image-element][src*=imgur]:style(margin-top: 0 !important)
 !#endif
+! Tracking
+! Removes link that has ?share_id=
+!reddit.com##a[href*="reddit.com"][href*="/s/"]
+!##a[href*="reddit.com"][href*="/s/"]
+! Mark links that has ?share_id=
+*##a[href*="reddit.com"][href*="/s/"]::before:style(content: "(Warning: Reddit Share Link) " !important; color: #E6000D !important; visibility: visible)
 
 ! Imgur
 ! Removes recommendations
