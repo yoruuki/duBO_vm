@@ -437,16 +437,21 @@ twitter.com##[aria-label="Timeline: Conversation"] [data-testid="cellInnerDiv"] 
 twitter.com##[aria-label="Get Verified"]
 
 ! Facebook
-! Removes 'Suggested for you'
+! Removes Suggested for you
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) div:not(:only-child)>div:only-child>div:only-child>div:first-child[class=""]>div:not([data-0]):has-text(/^Suggested/):upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) :is(h3,h4) [role=button]:has-text(Follow):upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+m.facebook.com##[data-mcomponent="MScreen"]>div[class="m"]>div:has-text(Suggested for you)
+! RemovesUnlabelled Suggested posts (with a Follow button)
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) :is(h3,h4) [role=button]:has-text(/Follow|Join/):upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+! Removes Suggested posts with the label next to the post date
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])):has-text(Suggested for you)
-! Removes 'People You May Know'
+! Removes People You May Know
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See all"][href="/friends/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
-! Removes 'Suggested groups'
+! Removes Suggested groups
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See more groups"][href="/groups/discover/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
-! Removes 'Reels and short videos'
+! Reels and short videos
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See more"][href="/reel/?s=ifu_see_more"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+! Removes Suggested pages
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="Suggested pages"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
 ! Removes 'Marketplace'
 facebook.com##[aria-label*="Marketplace"] object > a[href^="/ads/"] > span:not(:empty):upward(11)
 facebook.com##[aria-label*="Marketplace"] object:has(> a[href^="/ads/"] > span:has-text(/^Sponsored$/)):upward(a):upward(3)
