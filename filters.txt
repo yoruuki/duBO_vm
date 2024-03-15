@@ -283,7 +283,7 @@ youtube.com##.branded-page-v2-secondary-col > .branded-page-related-channels > .
 youtube.com###channel-subscription-promo-in-feed
 ! Removes video recomendations after a video ends
 youtube.com,youtube-nocookie.com##.ytp-endscreen-content
-/endscreen.js$script,important,domain=youtube.com|youtube-nocookie.com
+/endscreen.js$script,xhr,important,domain=youtube.com|youtube-nocookie.com
 ! Stop autoplay
 youtube.com###head.ytd-compact-autoplay-renderer
 youtube.com##.checkbox-on-off
@@ -438,20 +438,20 @@ twitter.com##[aria-label="Get Verified"]
 
 ! Facebook
 ! Removes Suggested for you
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) div:not(:only-child)>div:only-child>div:only-child>div:first-child[class=""]>div:not([data-0]):has-text(/^Suggested/):upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) div:not(:only-child)>div:only-child>div:only-child>div:first-child[class=""]>div:not([data-0]):has-text(/^Suggested/):upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
 m.facebook.com##[data-mcomponent="MScreen"]>div[class="m"]>div:has-text(Suggested for you)
-! RemovesUnlabelled Suggested posts (with a Follow button)
+! Removes Unlabelled Suggested posts (with a Follow button)
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) :is(h3,h4) [role=button]:has-text(/Follow|Join/):upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
 ! Removes Suggested posts with the label next to the post date
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])):has-text(Suggested for you)
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])):has-text(Suggested for you):style(height: 0 !important; overflow: hidden !important;)
 ! Removes People You May Know
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See all"][href="/friends/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [href="/friends/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
 ! Removes Suggested groups
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See more groups"][href="/groups/discover/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [href="/groups/discover/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
 ! Reels and short videos
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="See more"][href="/reel/?s=ifu_see_more"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [href="/reel/?s=ifu_see_more"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
 ! Removes Suggested pages
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="Suggested pages"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="Suggested pages"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
 ! Removes 'Marketplace'
 facebook.com##[aria-label*="Marketplace"] object > a[href^="/ads/"] > span:not(:empty):upward(11)
 facebook.com##[aria-label*="Marketplace"] object:has(> a[href^="/ads/"] > span:has-text(/^Sponsored$/)):upward(a):upward(3)
@@ -461,6 +461,7 @@ facebook.com##div[role=article] span:not(>*):has-text(/^Related discussions$/):u
 facebook.com##div[role=button] > span:not(>*):has-text(/related/i):upward(4)
 ! Remove suggested pages
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="Suggested pages"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset]))
+
 ! Removes video ads
 facebook.com##.j83agx80.cbu4d94t.ni8dbmo4.stjgntxs.l9j0dhe7 > .ni8dbmo4.stjgntxs.l9j0dhe7 > div > .p8dawk7l.abiwlrkh.l9j0dhe7.lzcic4wl.f1sip0of.esuyzwwr.i1ao9s8h.a8nywdso.qt6c0cv9.rz4wbd8a.jb3vyjys.hcukyx3x.oygrvhab.cxmmr5t8.kvgmc6g5.p7hjln8o.a8c37x1j.nhd2j8a9.rq0escxv.r7d6kgcz.e9989ue4.esr5mh6w.qu0x051f.g5ia77u1.oajrlxb2
 facebook.com##.k4urcfbm.l9j0dhe7.stjgntxs.ni8dbmo4.datstx6m.tqsryivl > .du4w35lb.a8c37x1j.datstx6m.l9j0dhe7.k4urcfbm > div > .datstx6m.pmk7jnqg.kr520xx4.k4urcfbm
