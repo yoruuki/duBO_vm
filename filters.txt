@@ -431,8 +431,7 @@ twitter.com##article [d$="2.66 6 1H5z"]:upward(article)
 ! Removes app suggestion overlay
 twitter.com###layers>div:last-of-type:has-text(Switch to the app)
 ! Removes Discover more / More Tweets - Conversation view suggestions
-twitter.com##[aria-label="Timeline: Conversation"] [data-testid="cellInnerDiv"] h2:has-text(/^(Discover more|More Tweets)$/):upward([data-testid="cellInnerDiv"])
-twitter.com##[aria-label="Timeline: Conversation"] [data-testid="cellInnerDiv"] h2:has-text(/^(Discover more|More Tweets)$/):upward([data-testid="cellInnerDiv"])~div
+twitter.com##[aria-label="Timeline: Conversation"] :is([data-testid="cellInnerDiv"]:has(h2), [data-testid="cellInnerDiv"]:has(h2)~div)
 ! Removes 'Get verified'
 twitter.com##[aria-label="Get Verified"]
 
