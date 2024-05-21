@@ -327,7 +327,10 @@ youtube.com##+js(nano-stb, resolve(1), *, 0.001)
 youtube.com##+js(set, yt.config_.EXPERIMENT_FLAGS.web_enable_ab_rsp_cl, false)
 youtube.com##+js(set, yt.config_.EXPERIMENT_FLAGS.ab_pl_man, false)
 ||googlevideo.com/videoplayback$xhr,3p,method=get,domain=www.youtube.com
-
+! Workaround for adblocker warning popup
+youtube.com#@#+js(set, yt.config_.EXPERIMENT_FLAGS.ab_sig_bit_dea, undefined)
+youtube.com#@#+js(trusted-rpnt, script, /^(\(function serverContract\(\))/s, '/*start*/(function(){const wrapper=(target,thisArg,args)=>{let content=Reflect.apply(target,thisArg,args);if(content.includes("ssapPrerollEnabled")){const modifiedContent=content.replace(/\n.\n.playerConfig\.ssapConfig\.ssapPrerollEnabled.{2}(?:tru|fals)e/,"");return modifiedContent;}return content;};const handler={apply:wrapper};window.atob=new Proxy(window.atob,handler);document.currentScript.textContent=document.currentScript.textContent.replace(/\/\*start\*\/(.*)\/\*end\*\//g,"");}());/*end*/$1')
+youtube.com##+js(trusted-rpnt, script, /^(\(function serverContract\(\))/s, '/*start*/(function(){const wrapper=(target,argumentsList,newTarget)=>{const result=Reflect.construct(target,argumentsList,newTarget);try{const decoded=(new TextDecoder).decode(result);if(decoded.includes("ssapPrerollEnabled")){const modifiedContent=decoded.replace(/\n.\n.playerConfig\.ssapConfig\.ssapPrerollEnabled.{2}(?:tru|fals)e/,"");const modifiedUint8Array=(new TextEncoder).encode(modifiedContent);return modifiedUint8Array}}catch(e){}return result};const handler={construct:wrapper};window.Uint8Array=new Proxy(Uint8Array,handler);document.currentScript.textContent=document.currentScript.textContent.replace(/\/\*start\*\/(.*)\/\*end\*\//g,"")})();/*end*/$1')
 
 ! Twitch
 ! Workaround for ads
