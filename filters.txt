@@ -31,6 +31,7 @@ google.*##+js(aeld, DOMContentLoaded, CONSENT)
 google.*##[id^="eob_"]
 ! Removes login dialogs on various pages
 ||accounts.google.com/gsi/*$xhr,script,3p
+||accounts.google.com/gsi/iframe/select?client_id=*.apps.googleusercontent.com
 ! Clear every bit of the google url
 $removeparam=ved,domain=google.*
 
@@ -134,8 +135,8 @@ youtube.com##+js(set, ytInitialData.overlay.upsellDialogRenderer.isVisible, fals
 youtube.com##+js(json-prune, [].playerResponse.auxiliaryUi.messageRenderers.upsellDialogRenderer)
 ! Probably this one is also needed, but cannot reproduce anymore
 youtube.com##+js(json-prune, auxiliaryUi.messageRenderers.upsellDialogRenderer)
-! Removes 'My Mix' on the homepage
-youtube.com##ytd-rich-item-renderer:has(#video-title-link[title*="Mix"][href$="start_radio=1"])
+! Removes 'My Mix' on the main page
+youtube.com##ytd-rich-item-renderer:has([href$="start_radio=1"])
 youtube.com##ytd-rich-item-renderer:has(yt-formatted-string:has-text(/^Mix/))
 ! Removes 'My Mix' on the right side panel
 ! youtube.com##ytd-compact-radio-renderer
@@ -154,6 +155,10 @@ youtube.com,youtube-nocookie.com##.ytp-pause-overlay, .show-video-thumbnail-butt
 youtube.com##ytd-search ytd-item-section-renderer>#contents>:not(ytd-video-renderer,ytd-channel-renderer),ytd-secondary-search-container-renderer
 ! Move homepage placeholders to the end
 youtube.com##ytd-browse[page-subtype="home"] :is(ytd-rich-grid-row, #contents.ytd-rich-grid-row):style(display: contents !important)
+! Fixes grid alignment
+youtube.com##ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column]:style(margin-left: calc(var(--ytd-rich-grid-item-margin)/2) !important)
+youtube.com##ytd-rich-grid-renderer>#contents:style(margin-left: calc(var(--ytd-rich-grid-gutter-margin)) !important)
+youtube.com###content.ytd-rich-section-renderer:style(margin-left: calc(var(--ytd-rich-grid-item-margin)/2) !important; margin-right: calc(var(--ytd-rich-grid-item-margin)*2.5) !important;)
 ! Removes everything on the top side
 youtube.com###masthead-container
 youtube.com###content > #page-manager:style(margin-top:0px!important;)
@@ -297,6 +302,7 @@ youtube.com##ytd-horizontal-card-list-renderer.ytd-item-section-renderer:has-tex
 ! Removes the Shorts section
 youtube.com##[is-shorts]
 m.youtube.com##ytm-reel-shelf-renderer
+m.youtube.com##ytm-rich-section-renderer:has([d^="M17.77,10.32l-1.2"])
 ! Removes the Shorts button
 youtube.com###guide [title="Shorts"], .ytd-mini-guide-entry-renderer[title="Shorts"]
 m.youtube.com##.pivot-shorts:upward(ytm-pivot-bar-item-renderer)
@@ -316,8 +322,8 @@ youtube.com###related ytd-compact-video-renderer:has([overlay-style="SHORTS"])
 ! Removes the new layout Shorts
 youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer:has([overlay-style="SHORTS"])
 ! Removes '1080 Premium' on the video quality menu
-youtube.com##.ytp-quality-menu .ytp-premium-label:upward(.ytp-menuitem)
-youtube.com##.ytp-quality-menu .ytp-menuitem:has(.ytp-premium-label)
+! youtube.com##.ytp-quality-menu .ytp-premium-label:upward(.ytp-menuitem)
+! youtube.com##.ytp-quality-menu .ytp-menuitem:has(.ytp-premium-label)
 ! Removes Self promotion dialogs in bottom left corner ("Join Now")
 youtube.com##ytd-popup-container > tp-yt-paper-dialog > ytd-mealbar-promo-renderer, ytd-popup-container > tp-yt-paper-dialog > yt-mealbar-promo-renderer:has-text(/Claim Offer|Join now|Not Now|No thanks|YouTube TV|live TV|Live TV|movies|sports|Try it free|unlimited DVR|watch NFL/)
 ! Removes anti adblock that shoq up occasionally, it cause push notification to not work
@@ -331,6 +337,10 @@ youtube.com##+js(set, yt.config_.EXPERIMENT_FLAGS.ab_pl_man, false)
 youtube.com#@#+js(set, yt.config_.EXPERIMENT_FLAGS.ab_sig_bit_dea, undefined)
 youtube.com#@#+js(trusted-rpnt, script, /^(\(function serverContract\(\))/s, '/*start*/(function(){const wrapper=(target,thisArg,args)=>{let content=Reflect.apply(target,thisArg,args);if(content.includes("ssapPrerollEnabled")){const modifiedContent=content.replace(/\n.\n.playerConfig\.ssapConfig\.ssapPrerollEnabled.{2}(?:tru|fals)e/,"");return modifiedContent;}return content;};const handler={apply:wrapper};window.atob=new Proxy(window.atob,handler);document.currentScript.textContent=document.currentScript.textContent.replace(/\/\*start\*\/(.*)\/\*end\*\//g,"");}());/*end*/$1')
 youtube.com##+js(trusted-rpnt, script, /^(\(function serverContract\(\))/s, '/*start*/(function(){const wrapper=(target,argumentsList,newTarget)=>{const result=Reflect.construct(target,argumentsList,newTarget);try{const decoded=(new TextDecoder).decode(result);if(decoded.includes("ssapPrerollEnabled")){const modifiedContent=decoded.replace(/\n.\n.playerConfig\.ssapConfig\.ssapPrerollEnabled.{2}(?:tru|fals)e/,"");const modifiedUint8Array=(new TextEncoder).encode(modifiedContent);return modifiedUint8Array}}catch(e){}return result};const handler={construct:wrapper};window.Uint8Array=new Proxy(Uint8Array,handler);document.currentScript.textContent=document.currentScript.textContent.replace(/\/\*start\*\/(.*)\/\*end\*\//g,"")})();/*end*/$1')
+! Main page no Videos
+youtube.com##ytd-browse[page-subtype="home"]
+! Video page no Sidebar
+youtube.com##ytd-watch-flexy #secondary
 
 ! Twitch
 ! Workaround for ads
@@ -396,47 +406,45 @@ twitch.tv#?#.clips-watch.tw-lg-pd-b-5.tw-pd-b-2.tw-sm-pd-b-3:style(max-width: no
 twitch.tv#?#.tw-avatar > img.tw-border-radius-rounded:style(border-radius: unset !important)
 
 ! Twitter
-! Removes inserted sections (Who to follow/Topics to follow, etc.) on my timeline
-twitter.com##[aria-label="Timeline: Your Home Timeline"] div[style^="transform: translateY"][style*="position: absolute;"]:not(:first-child:has-text(/^Show \d\d? Tweets?$/)):not(:has(article, [href^="/i/status/"], [role="progressbar"]))
-! Removes inserted sections (Who to follow/Topics to follow, etc.) on others timeline
-twitter.com##[aria-label$="’s Tweets"] div[style^="transform: translateY"][style*="position: absolute;"]:not(:has(article, [href^="/i/status/"], [role="progressbar"]))
+! Clean Timelines - See Only Tweets/Posts, No Inserts
+twitter.com,x.com##:is([aria-label="Timeline: Your Home Timeline"],[aria-label^="Timeline:"][aria-label$="posts"]) div[style^="transform: translateY"][style*="position: absolute;"]:not(:has(article, [href^="/i/status/"], [role="progressbar"],>div>button))
 ! Removes 'Follow/Recommended Topic' when accessing topics
-twitter.com##article [aria-label^="Follow Topic"], article [aria-label^="Recommended Topic"]:upward(article)
+twitter.com,x.com##article [aria-label^="Follow Topic"], article [aria-label^="Recommended Topic"]:upward(article)
 ! Removes 'More Tweets' when accessing tweets
-twitter.com##[aria-label="Timeline: Conversation"] h2>div>span:has-text(/^More Tweets$/):upward([style^="transform"])
-twitter.com##[aria-label="Timeline: Conversation"] h2>div>span:has-text(/^More Tweets$/):upward([style^="transform"])~div
+twitter.com,x.com,x.com,x.com##[aria-label="Timeline: Conversation"] h2>div>span:has-text(/^More Tweets$/):upward([style^="transform"])
+twitter.com,x.com,x.com,x.com##[aria-label="Timeline: Conversation"] h2>div>span:has-text(/^More Tweets$/):upward([style^="transform"])~div
 ! Removes 'Topics to follow' on the sidebar
-twitter.com##[data-testid="sidebarColumn"] [href="/i/topics/picker/home"]:upward(section)
+twitter.com,x.com,x.com,x.com##[data-testid="sidebarColumn"] [href="/i/topics/picker/home"]:upward(section)
 ! Removes 'Trending now/Trends for you' on the sidebar
-twitter.com##[aria-label$="trending now" i]
+twitter.com,x.com,x.com,x.com##[aria-label$="trending now" i]
 ! Removes 'Who to follow/You might like' on the sidebar
-twitter.com##[aria-label="who to follow" i]:upward(1)
+twitter.com,x.com,x.com,x.com##[aria-label="who to follow" i]:upward(1)
 ! Removes login popup
 !#if !env_mobile
 ! On mobile, this one breaks any panel confirmation including the panel used to switch from 'Top Tweets' to 'Latest Tweets'
-twitter.com##div#layers div[data-testid="sheetDialog"]:upward(div[role="group"][tabindex="0"])
+twitter.com,x.com,x.com,x.com##div#layers div[data-testid="sheetDialog"]:upward(div[role="group"][tabindex="0"])
 !#endif
-twitter.com##html:style(overflow: auto !important;)
+twitter.com,x.com,x.com,x.com##html:style(overflow: auto !important;)
 ! Removes everything on the right side
-twitter.com##.r-1hycxz.r-1udh08x.r-zso239.r-aqfbo4.css-1dbjc4n
+twitter.com,x.com##.r-1hycxz.r-1udh08x.r-zso239.r-aqfbo4.css-1dbjc4n
 ! Removes everything on the left side
-twitter.com##.r-ipm5af.r-1xcajam.r-1pi2tsx.r-aqfbo4.css-1dbjc4n
+twitter.com,x.com##.r-ipm5af.r-1xcajam.r-1pi2tsx.r-aqfbo4.css-1dbjc4n
 !#if env_mobile
 ! Allow any panel confirmation on mobile
-!twitter.com#@##react-root
-twitter.com#@#.r-zchlnj.r-1xcajam.r-12vffkv.r-1d2f490.r-1p0dtai.r-aqfbo4.css-1dbjc4n
+!twitter.com,x.com#@##react-root
+twitter.com,x.com#@#.r-zchlnj.r-1xcajam.r-12vffkv.r-1d2f490.r-1p0dtai.r-aqfbo4.css-1dbjc4n
 !#endif
 ! Removes analytics button
-twitter.com##article [role=group] [href$="/analytics"]:upward(div:not(:only-child))
-twitter.com##[aria-label="Timeline: Conversation"] [href*="/status/"] ~ span
+twitter.com,x.com##article [role=group] [href$="/analytics"]:upward(div:not(:only-child))
+twitter.com,x.com##[aria-label="Timeline: Conversation"] [href*="/status/"] ~ span
 ! Removes 'You might like'
-twitter.com##article [d$="2.66 6 1H5z"]:upward(article)
+twitter.com,x.com##article [d$="2.66 6 1H5z"]:upward(article)
 ! Removes app suggestion overlay
-twitter.com###layers>div:last-of-type:has-text(Switch to the app)
+twitter.com,x.com###layers>div:last-of-type:has-text(Switch to the app)
 ! Removes Discover more / More Tweets - Conversation view suggestions
-twitter.com##[aria-label="Timeline: Conversation"] :is([data-testid="cellInnerDiv"]:has(h2:not(:only-child)), [data-testid="cellInnerDiv"]:has(h2:not(:only-child))~div)
+twitter.com,x.com##[aria-label="Timeline: Conversation"] :is([data-testid="cellInnerDiv"]:has(h2:not(:only-child)), [data-testid="cellInnerDiv"]:has(h2:not(:only-child))~div)
 ! Removes 'Get verified'
-twitter.com##[aria-label="Get Verified"]
+twitter.com,x.com##[aria-label="Get Verified"]
 
 ! Facebook
 ! Removes Suggested for you
@@ -451,7 +459,7 @@ facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [href
 ! Removes Suggested groups
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [href="/groups/discover/"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
 ! Reels and short videos
-facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [href="/reel/?s=ifu_see_more"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
+facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])):has([aria-label="Reels"]):style(height: 0 !important; overflow: hidden !important;)
 ! Removes Suggested pages
 facebook.com##:is([aria-posinset],[aria-describedby]:not([aria-posinset])) [aria-label="Suggested pages"]:upward([aria-posinset],[aria-describedby]:not([aria-posinset])):style(height: 0 !important; overflow: hidden !important;)
 ! Removes 'Marketplace'
