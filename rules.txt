@@ -39,6 +39,7 @@ no-large-media: behind-the-scene false
 * youtube-ui.l.google.com * noop
 * ytimg.l.google.com * noop
 * translate.google.com * noop
+* www.google.com * noop
 * googleapis.com * noop
 * googlehosted.com * noop
 * googleusercontent.com * noop
